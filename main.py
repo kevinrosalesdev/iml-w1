@@ -8,4 +8,6 @@ print(num_ds.head())
 print(cat_ds.head())
 print(mix_ds.head())
 
-print(dbscan.test_dbscan())
+print(dbscan.test_dbscan(num_ds))
+print(dbscan.test_dbscan(cat_ds))
+print(dbscan.test_dbscan(mix_ds))

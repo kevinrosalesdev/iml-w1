@@ -1,6 +1,7 @@
 from arffdatasetreader import dataset_reader as dr
 from clusteringgenerators import dbscan, kmeans, b_kmeans, k_x
 from collections import Counter
+import numpy as np
 
 
 def get_data():
@@ -18,6 +19,20 @@ def run_dbscan(dataset, eps, min_samples):
     # 'the id -1 contains the outliers
     print("Clusters id and the points inside:", clusters)
     print('Num of clusters = {}'.format(len(clusters)-1))
+
+
+def run_kmeans(dataset, k, max_iterations=30):
+    print(dataset.head())
+    labels = kmeans.ul_kmeans(dataset, k, max_iterations)[0]
+    print(labels)
+    clusters = Counter(labels)
+    print("Clusters id and the points inside:", clusters)
+    print('Num of clusters = {}'.format(len(clusters)))
+
+
+def get_best_k(dataset, max_iterations=10):
+    k_error = [kmeans.ul_kmeans(dataset, index, max_iterations, plot_distances=False)[1] for index in range(1, 20)]
+    kmeans.plot_k_error(k_error)
 
 
 def test_dbscan(datasets):
@@ -38,9 +53,17 @@ def test_dbscan(datasets):
 
 
 def test_kmeans(datasets):
-    kmeans.ul_kmeans(datasets[0])
-    kmeans.ul_kmeans(datasets[1])
-    kmeans.ul_kmeans(datasets[2])
+    print("Numerical Dataset ('Pen-based') clustering with K-Means")
+    # get_best_k(datasets[0], max_iterations=10)
+    run_kmeans(datasets[0], k=10, max_iterations=30)
+
+    print("Categorical Dataset ('Kropt') clustering with K-Means")
+    # get_best_k(datasets[0], max_iterations=10)
+    run_kmeans(datasets[1], k=18, max_iterations=30)
+
+    print("Mixed Dataset ('Adult') clustering with K-Means")
+    # get_best_k(datasets[0], max_iterations=10)
+    run_kmeans(datasets[2], k=2, max_iterations=30)
 
 
 def test_b_kmeans(datasets):
@@ -56,10 +79,11 @@ def test_k_x(datasets):
 
 
 if __name__ == '__main__':
+    np.random.seed(0)
     datasets = get_data()
 
     test_dbscan(datasets)
 
     test_kmeans(datasets)
-    test_b_kmeans(datasets)
-    test_k_x(datasets)
+    # test_b_kmeans(datasets)
+    # test_k_x(datasets)

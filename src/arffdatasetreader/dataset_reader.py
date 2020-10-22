@@ -5,7 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 
 
-def read_processed_data(dataset_type, force_creation):
+def read_processed_data(dataset_type: str, force_creation: bool) -> pd.DataFrame:
 
     accepted_ds_types = ['numerical', 'categorical', 'mixed']
     if dataset_type not in accepted_ds_types:
@@ -49,7 +49,7 @@ def process_num_data(path):
 
     numerical_df = pd.DataFrame(pen_based_dataset)
     numerical_df_without_class = numerical_df.drop('a17', axis=1)
-    numerical_df_without_class.to_csv(path + '_processed.csv')
+    numerical_df_without_class.to_csv(path + '_processed.csv', index=False)
     print("Numerical dataset precessed and created")
     return pd.read_csv(path + '_processed.csv')
 
@@ -76,7 +76,7 @@ def process_cat_data(path):
     sc = StandardScaler()
     categ_values_normalized = sc.fit_transform(categ_df_without_class)
     categ_df_normalized = pd.DataFrame(categ_values_normalized, columns=categ_df_without_class.columns)
-    categ_df_normalized.to_csv(path + '_processed.csv')
+    categ_df_normalized.to_csv(path + '_processed.csv', index=False)
     print("Categorical dataset precessed and created")
     return pd.read_csv(path + '_processed.csv')
 
@@ -107,6 +107,13 @@ def process_mix_data(path):
     sc = StandardScaler()
     mixed_values_normalized = sc.fit_transform(mixed_df_encoded)
     mixed_df_normalized = pd.DataFrame(mixed_values_normalized, columns=mixed_df_encoded.columns)
-    mixed_df_normalized.to_csv(path + '_processed.csv')
+    mixed_df_normalized.to_csv(path + '_processed.csv', index=False)
     print("Mixed dataset precessed and created")
     return pd.read_csv(path + '_processed.csv')
+
+
+def get_datasets(force_creation: bool = False):
+    num_ds = read_processed_data('numerical', force_creation)
+    cat_ds = read_processed_data('categorical', force_creation)
+    mix_ds = read_processed_data('mixed', force_creation)
+    return [num_ds, cat_ds, mix_ds]

@@ -52,7 +52,7 @@ def test_kmeans(datasets):
     run_kmeans(datasets[0], k=10, max_iterations=30)
 
     print("Categorical Dataset ('Kropt') clustering with K-Means")
-    # get_best_k(datasets[0], max_iterations=10)
+    get_best_k(datasets[0], max_iterations=10)
     run_kmeans(datasets[1], k=18, max_iterations=30)
 
     print("Mixed Dataset ('Adult') clustering with K-Means")

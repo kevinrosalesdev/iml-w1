@@ -62,21 +62,21 @@ def test_kmeans(datasets):
 
 def test_bisecting_kmeans(datasets):
 
-    bis_kmeans = BisectingKMeans(10, 'dimension')
-    bis_kmeans.apply_unsupervised_learning(datasets[0])
-    bis_kmeans.apply_unsupervised_learning(datasets[1])
-    bis_kmeans.apply_unsupervised_learning(datasets[2])
+    for i in range(0, len(datasets)):
+        bis_kmeans_dim = BisectingKMeans(10, 'dimension')
+        bis_kmeans_dim.apply_unsupervised_learning(datasets[i])
 
+    for i in range(0, len(datasets)):
+        bis_kmeans_std = BisectingKMeans(10, 'std')
+        bis_kmeans_std.apply_unsupervised_learning(datasets[i])
 
 def stress_test_bisecting_kmeans(datasets):
 
-    bis_kmeans = BisectingKMeans(10, 'dimension')
-    labels_10 = []
     for i in range(1, 11):
-
+        bis_kmeans = BisectingKMeans(10, 'dimension')
         print("Dimension of the dataset=", 100 * i)
         print("__________________________________")
-        labels_10.append(bis_kmeans.apply_unsupervised_learning(datasets[0].head(100 * i)))
+        bis_kmeans.apply_unsupervised_learning(datasets[0].head(100 * i))
 
 
 def test_k_x(datasets):

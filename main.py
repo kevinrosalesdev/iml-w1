@@ -1,14 +1,8 @@
 from arffdatasetreader import dataset_reader as dr
-from clusteringgenerators import dbscan, kmeans, b_kmeans, k_x
+from clusteringgenerators import dbscan, kmeans, k_x
+from clusteringgenerators.bisecting_kmeans import BisectingKMeans
 from collections import Counter
 import numpy as np
-
-
-def get_data():
-    num_ds = dr.read_processed_data('numerical', False)
-    cat_ds = dr.read_processed_data('categorical', False)
-    mix_ds = dr.read_processed_data('mixed', False)
-    return [num_ds, cat_ds, mix_ds]
 
 
 def run_dbscan(dataset, eps, min_samples):
@@ -66,10 +60,23 @@ def test_kmeans(datasets):
     run_kmeans(datasets[2], k=2, max_iterations=30)
 
 
-def test_b_kmeans(datasets):
-    b_kmeans.ul_b_kmeans(datasets[0])
-    b_kmeans.ul_b_kmeans(datasets[1])
-    b_kmeans.ul_b_kmeans(datasets[2])
+def test_bisecting_kmeans(datasets):
+
+    bis_kmeans = BisectingKMeans(10, 'dimension')
+    bis_kmeans.apply_unsupervised_learning(datasets[0])
+    bis_kmeans.apply_unsupervised_learning(datasets[1])
+    bis_kmeans.apply_unsupervised_learning(datasets[2])
+
+
+def stress_test_bisecting_kmeans(datasets):
+
+    bis_kmeans = BisectingKMeans(10, 'dimension')
+    labels_10 = []
+    for i in range(1, 11):
+
+        print("Dimension of the dataset=", 100 * i)
+        print("__________________________________")
+        labels_10.append(bis_kmeans.apply_unsupervised_learning(datasets[0].head(100 * i)))
 
 
 def test_k_x(datasets):
@@ -80,10 +87,11 @@ def test_k_x(datasets):
 
 if __name__ == '__main__':
     np.random.seed(0)
-    datasets = get_data()
+    datasets = dr.get_datasets()
 
-    test_dbscan(datasets)
+    #test_dbscan(datasets)
 
-    test_kmeans(datasets)
-    # test_b_kmeans(datasets)
+    #test_kmeans(datasets)
+    test_bisecting_kmeans(datasets)
+    #stress_test_bisecting_kmeans(datasets) #TODO (AM) Have a look why we get an error during the stress test seems a problem with kmeans
     # test_k_x(datasets)

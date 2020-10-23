@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 
-def ul_dbscan(dataset, eps, min_samples):
+def apply_unsupervised_learning(dataset, eps, min_samples):
     if min_samples < dataset.shape[1] + 1 or min_samples < 3:
         print("[WARNING] 'min_samples' parameter should be greater than D(features) + 1 and at least 3")
 

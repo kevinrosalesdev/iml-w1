@@ -2,19 +2,16 @@
 
 ## Datasets
 
-________
-
 - Mixed: [`Adult`](datasets/adult.arff) [Huge] / [`cmc`](datasets/cmc.arff) [Huge]
 - Nominal: [`Kropt`](datasets/kropt.arff) [Huge] 
 - Numerical:[`Pen-based`](datasets/pen-based.arff) [Medium]
 
 ## Schedule
 
-| Kevin                                | Alba         | Andrea                |
-| :----------------------------------- | ------------ | --------------------- |
-| - Solve `get_best_k()`               | - `Kmedians` | - Test a new dataset. |
-| - Solve `euclidean_distance` problem | - Validation | - Validation          |
-| - `Fuzzy C_Means`                    |              |                       |
+| Kevin             | Alba         | Andrea                |
+| :---------------- | ------------ | --------------------- |
+| - `Fuzzy C_Means` | - `Kmedians` | - Test a new dataset. |
+|                   | - Validation | - Validation          |
 
 > Remember to use git branches in order to avoid conflicts in code please!!
 >

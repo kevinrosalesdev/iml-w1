@@ -27,7 +27,7 @@ class BisectingKMeans:
         while len(self.sub_dataset_map) < self.n_clusters:
             branch_to_divide = self.get_branch_to_divide()
 
-            labels = kmeans.ul_kmeans(branch_to_divide, 2, plot_distances=False)[0]
+            labels = kmeans.apply_unsupervised_learning(branch_to_divide, 2, plot_distances=False)[0]
             # dividing the dataset and putting the 2 sub-dataset in our dictionary
             left_branch = branch_to_divide[labels == 0]
             right_branch = branch_to_divide[labels == 1]

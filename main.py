@@ -2,12 +2,11 @@ from arffdatasetreader import dataset_reader as dr
 from clusteringgenerators import dbscan, kmeans, k_x
 from clusteringgenerators.bisecting_kmeans import BisectingKMeans
 from collections import Counter
-import numpy as np
 
 
 def run_dbscan(dataset, eps, min_samples):
     print(dataset.head())
-    model = dbscan.ul_dbscan(dataset, eps, min_samples)
+    model = dbscan.apply_unsupervised_learning(dataset, eps, min_samples)
     labels = model.labels_
     clusters = Counter(labels)
     # 'the id -1 contains the outliers
@@ -17,16 +16,11 @@ def run_dbscan(dataset, eps, min_samples):
 
 def run_kmeans(dataset, k, max_iterations=30):
     print(dataset.head())
-    labels = kmeans.ul_kmeans(dataset, k, max_iterations)[0]
+    labels = kmeans.apply_unsupervised_learning(dataset, k, max_iterations)[0]
     print(labels)
     clusters = Counter(labels)
     print("Clusters id and the points inside:", clusters)
     print('Num of clusters = {}'.format(len(clusters)))
-
-
-def get_best_k(dataset, max_iterations=10):
-    k_error = [kmeans.ul_kmeans(dataset, index, max_iterations, plot_distances=False)[1] for index in range(1, 20)]
-    kmeans.plot_k_error(k_error)
 
 
 def test_dbscan(datasets):
@@ -48,16 +42,16 @@ def test_dbscan(datasets):
 
 def test_kmeans(datasets):
     print("Numerical Dataset ('Pen-based') clustering with K-Means")
-    # get_best_k(datasets[0], max_iterations=10)
+    kmeans.get_best_k(datasets[0], max_iterations=10)
     run_kmeans(datasets[0], k=10, max_iterations=30)
 
     print("Categorical Dataset ('Kropt') clustering with K-Means")
-    get_best_k(datasets[0], max_iterations=10)
-    run_kmeans(datasets[1], k=18, max_iterations=30)
+    # kmeans.get_best_k(datasets[1], max_iterations=10)
+    # run_kmeans(datasets[1], k=18, max_iterations=30)
 
     print("Mixed Dataset ('Adult') clustering with K-Means")
-    # get_best_k(datasets[0], max_iterations=10)
-    run_kmeans(datasets[2], k=2, max_iterations=30)
+    # kmeans.get_best_k(datasets[2], max_iterations=10)
+    # run_kmeans(datasets[2], k=2, max_iterations=30)
 
 
 def test_bisecting_kmeans(datasets):
@@ -69,6 +63,7 @@ def test_bisecting_kmeans(datasets):
     for i in range(0, len(datasets)):
         bis_kmeans_std = BisectingKMeans(10, 'std')
         bis_kmeans_std.apply_unsupervised_learning(datasets[i])
+
 
 def stress_test_bisecting_kmeans(datasets):
 
@@ -86,12 +81,12 @@ def test_k_x(datasets):
 
 
 if __name__ == '__main__':
-    np.random.seed(0)
     datasets = dr.get_datasets()
 
-    #test_dbscan(datasets)
+    # test_dbscan(datasets)
 
-    #test_kmeans(datasets)
-    test_bisecting_kmeans(datasets)
-    #stress_test_bisecting_kmeans(datasets) #TODO (AM) Have a look why we get an error during the stress test seems a problem with kmeans
+    test_kmeans(datasets)
+    # test_bisecting_kmeans(datasets)
+    stress_test_bisecting_kmeans(datasets)
+
     # test_k_x(datasets)

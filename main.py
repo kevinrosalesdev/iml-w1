@@ -1,5 +1,5 @@
 from arffdatasetreader import dataset_reader as dr
-from clusteringgenerators import dbscan, kmeans, k_x
+from clusteringgenerators import dbscan, kmeans, kmedians
 from clusteringgenerators.bisecting_kmeans import BisectingKMeans
 from collections import Counter
 
@@ -21,6 +21,15 @@ def run_kmeans(dataset, k, max_iterations=30):
     clusters = Counter(labels)
     print("Clusters id and the points inside:", clusters)
     print('Num of clusters = {}'.format(len(clusters)))
+    
+def run_kmedians(dataset, k, max_iterations=30):
+    print(dataset.head())
+    labels = kmedians.ul_kmedians(dataset, k, max_iterations)[0]
+    print(labels)
+    clusters = Counter(labels)
+    print("Clusters id and the points inside in K-medians:", clusters)
+    print('Num of clusters in K-medians = {}'.format(len(clusters)))
+    
 
 
 def test_dbscan(datasets):
@@ -75,9 +84,14 @@ def stress_test_bisecting_kmeans(datasets):
 
 
 def test_k_x(datasets):
-    k_x.ul_k_x(datasets[0])
-    k_x.ul_k_x(datasets[1])
-    k_x.ul_k_x(datasets[2])
+    print("Numerical Dataset ('Pen-based') clustering with K-Medians")
+    run_kmedians(datasets[0], k=10, max_iterations=30)
+    
+    print("Numerical Dataset ('Kropt') clustering with K-Medians")
+    run_kmedians(datasets[1], k=18, max_iterations=30)
+    
+    print("Mixed Dataset ('Adult') clustering with K-Medians")
+    run_kmedians(datasets[2], k=2, max_iterations=30)
 
 
 if __name__ == '__main__':
@@ -89,4 +103,4 @@ if __name__ == '__main__':
     # test_bisecting_kmeans(datasets)
     stress_test_bisecting_kmeans(datasets)
 
-    # test_k_x(datasets)
+    test_kmedians(datasets)

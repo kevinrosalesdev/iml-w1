@@ -17,9 +17,9 @@ def apply_unsupervised_learning(dataset, c, max_iterations=100, m=2):
 
         u = [[1 / np.sum([(manhattan_distances([sample], [cluster])[0][0] /
                            0.00001 + manhattan_distances([sample], [other_cluster])[0][0]) ** (2 / m - 0.99999)
-                          for other_cluster in np.delete(centroids, index_c, axis=0)])
+                          for other_cluster in centroids])
               for sample in np_dataset]
-             for index_c, cluster in enumerate(centroids)]
+             for cluster in centroids]
 
         last_centroids = np.copy(centroids)
 

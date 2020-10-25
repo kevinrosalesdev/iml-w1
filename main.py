@@ -2,6 +2,8 @@ from arffdatasetreader import dataset_reader as dr
 from clusteringgenerators import dbscan, kmeans, kmedians, f_cmeans
 from clusteringgenerators.bisecting_kmeans import BisectingKMeans
 from collections import Counter
+import time
+import math
 
 
 def run_dbscan(dataset, eps, min_samples):
@@ -75,12 +77,18 @@ def test_kmeans(datasets):
 def test_bisecting_kmeans(datasets):
 
     for i in range(0, len(datasets)):
+        tic = time.time()
         bis_kmeans_dim = BisectingKMeans(10, 'dimension')
         bis_kmeans_dim.apply_unsupervised_learning(datasets[i])
+        toc = time.time()
+        print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
     for i in range(0, len(datasets)):
+        tic = time.time()
         bis_kmeans_std = BisectingKMeans(10, 'std')
         bis_kmeans_std.apply_unsupervised_learning(datasets[i])
+        toc = time.time()
+        print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
 
 def stress_test_bisecting_kmeans(datasets):
@@ -120,8 +128,8 @@ if __name__ == '__main__':
     # test_dbscan(datasets)
 
     # test_kmeans(datasets)
-    # test_bisecting_kmeans(datasets)
+    test_bisecting_kmeans(datasets)
     # stress_test_bisecting_kmeans(datasets)
     # test_kmedians(datasets)
 
-    test_f_cmeans(datasets)
+    #test_f_cmeans(datasets)

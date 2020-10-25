@@ -8,10 +8,10 @@
 
 ## Schedule
 
-| Kevin             | Alba         | Andrea                |
-| :---------------- | ------------ | --------------------- |
-| - `Fuzzy C_Means` | - `Kmedians` | - Test a new dataset. |
-|                   | - Validation | - Validation          |
+| Alba         | Andrea                |
+| ------------ | --------------------- |
+| - Validation | - Test a new dataset. |
+|              | - Validation          |
 
 > Remember to use git branches in order to avoid conflicts in code please!!
 >

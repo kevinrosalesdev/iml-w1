@@ -190,8 +190,8 @@ def print_count_values_per_column(df, columns, show_description=False):
 
 
 def get_datasets(force_creation: bool = False):
-    mix_ds = read_processed_data('mixed2', force_creation)
     num_ds = read_processed_data('numerical', force_creation)
     cat_ds = read_processed_data('categorical', force_creation)
-    return [mix_ds, num_ds, cat_ds]
+    mix_ds = read_processed_data('mixed2', force_creation)
+    return [num_ds, cat_ds, mix_ds]
 

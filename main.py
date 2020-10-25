@@ -1,5 +1,5 @@
 from arffdatasetreader import dataset_reader as dr
-from clusteringgenerators import dbscan, kmeans, kmedians
+from clusteringgenerators import dbscan, kmeans, kmedians, f_cmeans
 from clusteringgenerators.bisecting_kmeans import BisectingKMeans
 from collections import Counter
 
@@ -21,16 +21,25 @@ def run_kmeans(dataset, k, max_iterations=30):
     clusters = Counter(labels)
     print("Clusters id and the points inside:", clusters)
     print('Num of clusters = {}'.format(len(clusters)))
-    
+
+
 def run_kmedians(dataset, k, max_iterations=30):
     print(dataset.head())
-    labels = kmedians.ul_kmedians(dataset, k, max_iterations)[0]
+    labels = kmedians.apply_unsupervised_learning(dataset, k, max_iterations)[0]
+    print(labels)
+    clusters = Counter(labels)
+    print("Clusters id and the points inside in K-medians:", clusters)
+    print('Num of clusters in K-medians = {}'.format(len(clusters)))
+
+
+def run_f_cmeans(dataset, c, max_iterations=100, m=2):
+    print(dataset.head())
+    labels = f_cmeans.apply_unsupervised_learning(dataset, c, max_iterations, m)[0]
     print(labels)
     clusters = Counter(labels)
     print("Clusters id and the points inside in K-medians:", clusters)
     print('Num of clusters in K-medians = {}'.format(len(clusters)))
     
-
 
 def test_dbscan(datasets):
     print("Numerical Dataset ('Pen-based') clustering with DBScan")
@@ -83,7 +92,7 @@ def stress_test_bisecting_kmeans(datasets):
         bis_kmeans.apply_unsupervised_learning(datasets[0].head(100 * i))
 
 
-def test_k_x(datasets):
+def test_kmedians(datasets):
     print("Numerical Dataset ('Pen-based') clustering with K-Medians")
     run_kmedians(datasets[0], k=10, max_iterations=30)
     
@@ -94,13 +103,25 @@ def test_k_x(datasets):
     run_kmedians(datasets[2], k=2, max_iterations=30)
 
 
+def test_f_cmeans(datasets):
+    print("Numerical Dataset ('Pen-based') clustering with K-Medians")
+    run_f_cmeans(datasets[0], c=10, max_iterations=5, m=2)
+
+    print("Numerical Dataset ('Kropt') clustering with K-Medians")
+    # run_f_cmeans(datasets[1], c=18, max_iterations=30)
+
+    print("Mixed Dataset ('Adult') clustering with K-Medians")
+    # run_f_cmeans(datasets[2], c=2, max_iterations=30)
+
+
 if __name__ == '__main__':
     datasets = dr.get_datasets()
 
     # test_dbscan(datasets)
 
-    test_kmeans(datasets)
+    # test_kmeans(datasets)
     # test_bisecting_kmeans(datasets)
-    stress_test_bisecting_kmeans(datasets)
+    # stress_test_bisecting_kmeans(datasets)
+    # test_kmedians(datasets)
 
-    test_kmedians(datasets)
+    test_f_cmeans(datasets)

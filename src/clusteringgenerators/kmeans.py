@@ -1,5 +1,5 @@
 from sklearn.metrics.pairwise import euclidean_distances
-from matplotlib import pyplot as plt
+from utils import error_plotter
 import numpy as np
 
 
@@ -30,7 +30,7 @@ def apply_unsupervised_learning(dataset, k, max_iterations=30, plot_distances=Tr
         iteration += 1
 
     if plot_distances:
-        plot_error(iteration_distances)
+        error_plotter.plot_error(iteration_distances)
 
     return sample_cluster, iteration_distance
 
@@ -38,24 +38,5 @@ def apply_unsupervised_learning(dataset, k, max_iterations=30, plot_distances=Tr
 def get_best_k(dataset, max_iterations=10):
     k_error = [apply_unsupervised_learning(dataset, index, max_iterations, plot_distances=False)[1]
                for index in range(1, 20)]
-    plot_k_error(k_error)
-
-
-def plot_error(iteration_distances):
-    plt.plot(list(range(0, len(iteration_distances))), iteration_distances)
-    plt.ylabel('Sum of distances from each sample to its nearest cluster')
-    plt.xlabel('Iteration')
-    plt.title('Sum of distances per iteration')
-    plt.grid()
-    plt.show()
-
-
-def plot_k_error(k_error):
-    plt.plot(list(range(1, len(k_error) + 1)), k_error, 'o-')
-    plt.ylabel('Sum of distances from each sample to its nearest cluster')
-    plt.xlabel('K')
-    plt.title('Sum of distances for each \'K\' value')
-    plt.grid()
-    plt.show()
-
+    error_plotter.plot_k_error(k_error)
 

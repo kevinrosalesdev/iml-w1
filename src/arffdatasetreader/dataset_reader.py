@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 
 def read_processed_data(dataset_type: str, force_creation: bool) -> pd.DataFrame:
 
-    accepted_ds_types = ['numerical', 'categorical', 'mixed']
+    accepted_ds_types = ['numerical', 'categorical', 'mixed', 'mixed2']
     if dataset_type not in accepted_ds_types:
         raise ValueError(f"{dataset_type}:: not valid dataset type")
 
@@ -40,6 +40,15 @@ def read_processed_data(dataset_type: str, force_creation: bool) -> pd.DataFrame
             except FileNotFoundError as e:
                 print("Processed dataset file not found")
         return process_mix_data(mix_ds_path)
+
+    if dataset_type == 'mixed2':
+        mix_ds_path2 = "datasets/hypothyroid"
+        if not force_creation:
+            try:
+                return pd.read_csv(mix_ds_path2 + processed + csv)
+            except FileNotFoundError as e:
+                print("Processed dataset file not found")
+        return process_mix_data2(mix_ds_path2)
 
 
 def process_num_data(path):
@@ -86,6 +95,7 @@ def process_mix_data(path):
 
     adult_dataset, adult_meta = arff.loadarff(path + ".arff")
 
+    # Decoding the dataset, these strings are in the form u'string_value'
     mixed_df = pd.DataFrame(adult_dataset)
     for column in mixed_df:
         if mixed_df[column].dtype == object:
@@ -112,8 +122,76 @@ def process_mix_data(path):
     return pd.read_csv(path + '_processed.csv')
 
 
+def process_mix_data2(path):
+    print("Processing Mixed2 dataset")
+
+    hypothyroid_dataset, hypothyroid_meta = arff.loadarff(path + ".arff")
+
+    # Decoding the dataset, these strings are in the form u'string_value'
+    mixed2_df = pd.DataFrame(hypothyroid_dataset)
+    for column in mixed2_df:
+        if mixed2_df[column].dtype == object:
+            mixed2_df[column] = mixed2_df[column].str.decode('utf8')
+
+    # Dropping the last column class
+    mixed2_df.drop('Class', axis=1, inplace=True)
+
+    # Dropping column with all missing values (3772 of 6064)
+    mixed2_df.drop('TBG', axis=1, inplace=True)
+
+    # Dropping column with just one distinct value
+    mixed2_df.drop('TBG_measured', axis=1, inplace=True)
+
+    # Converting Unknown char from "?" to NaN and eliminate the corresponding rows
+    mixed2_df = mixed2_df.replace('?', np.nan)
+
+    # Dealing with missing values in continuous columns replacing them with the median value of each column
+    # (the distribution of this column has very high std)
+    columns_cont_with_missing_values = ['age','TSH', 'T3', 'TT4', 'T4U', 'FTI']
+    for column_of_missing_values in columns_cont_with_missing_values:
+        mixed2_df[column_of_missing_values].fillna(mixed2_df[column_of_missing_values].median(), inplace=True, )
+
+    mixed2_df['sex'].fillna(mixed2_df['sex'].value_counts().index[0], inplace=True)
+
+    # Label encoding for double choice columns
+    columns_label_encoding = ['sex', 'on_thyroxine', 'query_on_thyroxine',
+               'on_antithyroid_medication', 'sick', 'pregnant', 'thyroid_surgery',
+               'I131_treatment', 'query_hypothyroid', 'query_hyperthyroid', 'lithium',
+               'goitre', 'tumor', 'hypopituitary', 'psych', 'TSH_measured',
+               'T3_measured', 'TT4_measured', 'T4U_measured',
+               'FTI_measured']
+
+    for column in columns_label_encoding:
+        le = LabelEncoder()
+        mixed2_df[column] = le.fit_transform(mixed2_df[column])
+
+    # One hot encoding for the last one
+    mixed2_df_encoded = pd.get_dummies(mixed2_df)
+
+    # Normalizing
+    sc = StandardScaler()
+    mixed2_normalized = sc.fit_transform(mixed2_df_encoded)
+    mixed2_df_normalized = pd.DataFrame(mixed2_normalized, columns=mixed2_df_encoded.columns)
+    mixed2_df_normalized.to_csv(path + '_processed.csv', index=False)
+    print("Mixed2 dataset precessed and created")
+    return pd.read_csv(path + '_processed.csv')
+
+
+def print_count_values_per_column(df, columns, show_description=False):
+    for column in columns:
+        print("-------------------------")
+        print(f"*{column}*")
+        print("-------------------------")
+        print(df[column].value_counts())
+        if show_description:
+            print("******************")
+            print(df[column].describe())
+            print("******************")
+
+
 def get_datasets(force_creation: bool = False):
+    mix_ds = read_processed_data('mixed2', force_creation)
     num_ds = read_processed_data('numerical', force_creation)
     cat_ds = read_processed_data('categorical', force_creation)
-    mix_ds = read_processed_data('mixed', force_creation)
-    return [num_ds, cat_ds, mix_ds]
+    return [mix_ds, num_ds, cat_ds]
+

@@ -57,7 +57,7 @@ def process_num_data(path):
     pen_based_dataset, pen_based_meta = arff.loadarff(path + ".arff")
 
     numerical_df = pd.DataFrame(pen_based_dataset)
-    numerical_df_without_class = numerical_df.drop('a17', axis=1)
+    numerical_df_without_class = numerical_df.drop(numerical_df.iloc[:, -1:], axis=1)
     numerical_df_without_class.to_csv(path + '_processed.csv', index=False)
     print("Numerical dataset precessed and created")
     return pd.read_csv(path + '_processed.csv')
@@ -74,7 +74,7 @@ def process_cat_data(path):
         if categ_df[column].dtype == object:
             categ_df[column] = categ_df[column].str.decode('utf8')
 
-    categ_df_without_class = categ_df.drop('game', axis=1)
+    categ_df_without_class = categ_df.drop(categ_df.iloc[:, -1:], axis=1)
 
     # Label Encoding
     for col in categ_df_without_class.columns:
@@ -104,7 +104,7 @@ def process_mix_data(path):
     # Converting Unknown char from "?" to NaN and eliminate the corresponding rows
     mixed_df = mixed_df.replace('?', np.nan)
     mixed_df = mixed_df.dropna()
-    mixed_df_without_class = mixed_df.drop('class', axis=1)
+    mixed_df_without_class = mixed_df.drop(mixed_df.iloc[:, -1:], axis=1)
 
     # Label encoding Sex column
     le = LabelEncoder()
@@ -134,7 +134,7 @@ def process_mix_data2(path):
             mixed2_df[column] = mixed2_df[column].str.decode('utf8')
 
     # Dropping the last column class
-    mixed2_df.drop('Class', axis=1, inplace=True)
+    mixed2_df.drop(mixed2_df.iloc[:, -1:], axis=1, inplace=True)
 
     # Dropping column with all missing values (3772 of 6064)
     mixed2_df.drop('TBG', axis=1, inplace=True)
@@ -147,7 +147,7 @@ def process_mix_data2(path):
 
     # Dealing with missing values in continuous columns replacing them with the median value of each column
     # (the distribution of this column has very high std)
-    columns_cont_with_missing_values = ['age','TSH', 'T3', 'TT4', 'T4U', 'FTI']
+    columns_cont_with_missing_values = ['age', 'TSH', 'T3', 'TT4', 'T4U', 'FTI']
     for column_of_missing_values in columns_cont_with_missing_values:
         mixed2_df[column_of_missing_values].fillna(mixed2_df[column_of_missing_values].median(), inplace=True, )
 
@@ -195,3 +195,23 @@ def get_datasets(force_creation: bool = False):
     mix_ds = read_processed_data('mixed2', force_creation)
     return [num_ds, cat_ds, mix_ds]
 
+
+def get_dataset_target(path):
+
+    dataset, meta = arff.loadarff(path)
+    # Decoding the dataset, these strings are in the form u'string_value'
+    data_frame = pd.DataFrame(dataset)
+    for column in data_frame:
+        if data_frame[column].dtype == object:
+            data_frame[column] = data_frame[column].str.decode('utf8')
+    target_column = data_frame.iloc[:, -1:].values.reshape(len(data_frame),)
+    le = LabelEncoder()
+    target_column = le.fit_transform(target_column)
+    return list(target_column)
+
+
+def get_datasets_target():
+    datasets_target = []
+    datasets_target.append(get_dataset_target('datasets/pen-based.arff'))
+    datasets_target.append(get_dataset_target('datasets/kropt.arff'))
+    datasets_target.append(get_dataset_target('datasets/hypothyroid.arff'))

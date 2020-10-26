@@ -4,8 +4,9 @@ import pandas as pd
 
 
 class BisectingKMeans:
-    def __init__(self, n_clusters: int, selector_type: str):
+    def __init__(self, n_clusters: int, n_iterations: int, selector_type: str):
         self.n_clusters = n_clusters
+        self.n_iterations = n_iterations
         self.sub_dataset_map = {}
         accepted_selector_type = ['dimension', 'std']
         if selector_type not in accepted_selector_type:
@@ -26,11 +27,10 @@ class BisectingKMeans:
         print("Applying Bisecting Kmeans clustering...")
         while len(self.sub_dataset_map) < self.n_clusters:
             branch_to_divide = self.get_branch_to_divide()
-
-            labels = kmeans.apply_unsupervised_learning(branch_to_divide, 2, plot_distances=False)[0]
+            best_labels = self.get_best_bisection(branch_to_divide)
             # dividing the dataset and putting the 2 sub-dataset in our dictionary
-            left_branch = branch_to_divide[labels == 0]
-            right_branch = branch_to_divide[labels == 1]
+            left_branch = branch_to_divide[best_labels == 0]
+            right_branch = branch_to_divide[best_labels == 1]
             # print(i in self.sub_dataset_map.keys())
             self.sub_dataset_map[i] = left_branch
             # print("left_branch =", len(left_branch.index), "key = ", i)
@@ -75,3 +75,15 @@ class BisectingKMeans:
         self.sub_dataset_map.pop(largest_key)
         # print("Biggest cluster --> key =", largest_key, "std =", largest_value)
         return branch_to_divide
+
+    def get_best_bisection(self, branch_to_divide):
+        iteration = 0
+        best_labels = []
+        min_iteration_distance = float('inf')
+        while iteration < self.n_iterations:
+            labels, iteration_distance = kmeans.apply_unsupervised_learning(branch_to_divide, 2, plot_distances=False)
+            if iteration_distance < min_iteration_distance:
+                min_iteration_distance = iteration_distance
+                best_labels = labels
+            iteration += 1
+        return best_labels

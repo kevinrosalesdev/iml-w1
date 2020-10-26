@@ -1,6 +1,7 @@
 from clusteringgenerators import kmeans
 import numpy as np
 import pandas as pd
+from utils import error_plotter
 
 
 class BisectingKMeans:
@@ -18,16 +19,17 @@ class BisectingKMeans:
                 self.get_branch_to_divide = self.get_biggest_std
 
     def apply_unsupervised_learning(self, X):
-        if self.n_clusters < 2:
+        if self.n_clusters < 1:
             print(f"Clustering is useless for {self.n_clusters} cluster")
             return
+        iteration_distances = []
         branch_to_divide = X.copy()
         self.sub_dataset_map[0] = branch_to_divide
         i = 0
         print("Applying Bisecting Kmeans clustering...")
         while len(self.sub_dataset_map) < self.n_clusters:
             branch_to_divide = self.get_branch_to_divide()
-            best_labels = self.get_best_bisection(branch_to_divide)
+            best_labels, min_iteration_distance = self.get_best_bisection(branch_to_divide)
             # dividing the dataset and putting the 2 sub-dataset in our dictionary
             left_branch = branch_to_divide[best_labels == 0]
             right_branch = branch_to_divide[best_labels == 1]
@@ -39,6 +41,7 @@ class BisectingKMeans:
             self.sub_dataset_map[i] = right_branch
             # print("right_branch =", len(right_branch.index), "key = ", i)
             i += 1
+            iteration_distances.append(min_iteration_distance)
 
         # print(f"END WHILE --> Number of clusters found = {len(self.sub_dataset_map)}")
         predictions = pd.Series(np.zeros(len(X), dtype=int), index=X.index)
@@ -48,7 +51,7 @@ class BisectingKMeans:
             subset = self.sub_dataset_map[key]
             predictions[predictions.index.isin(subset.index)] = i
             # print("cluster", i, "-->", len(subset))
-        return predictions.values
+        return predictions.values, iteration_distances
 
     def get_biggest_cluster(self):
         largest_value = 0
@@ -86,4 +89,5 @@ class BisectingKMeans:
                 min_iteration_distance = iteration_distance
                 best_labels = labels
             iteration += 1
-        return best_labels
+        return best_labels, min_iteration_distance
+

@@ -4,6 +4,8 @@ from clusteringgenerators.bisecting_kmeans import BisectingKMeans
 from collections import Counter
 import time
 import math
+from utils import error_plotter
+
 
 
 def run_dbscan(dataset, eps, min_samples):
@@ -91,13 +93,14 @@ def test_bisecting_kmeans(datasets):
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
 
-def stress_test_bisecting_kmeans(datasets):
+def get_best_k_bisecting_kmeans(dataset, n_iterations):
 
-    for i in range(1, 11):
-        bis_kmeans = BisectingKMeans(10, 1, 'dimension')
-        print("Dimension of the dataset=", 100 * i)
-        print("__________________________________")
-        bis_kmeans.apply_unsupervised_learning(datasets[0].head(100 * i))
+    k_error = []
+    for index in range(1, 21):
+        print("k =", index)
+        bis_kmeans_dim = BisectingKMeans(n_clusters=index, n_iterations=n_iterations, selector_type='dimension')
+        labels, k_error = bis_kmeans_dim.apply_unsupervised_learning(dataset)
+    error_plotter.plot_k_error(k_error)
 
 
 def test_kmedians(datasets):
@@ -129,7 +132,8 @@ if __name__ == '__main__':
     # test_dbscan(datasets)
 
     # test_kmeans(datasets)
-    test_bisecting_kmeans(datasets)
+    #test_bisecting_kmeans(datasets)
+    get_best_k_bisecting_kmeans(dataset=datasets[2], n_iterations=1)
     # stress_test_bisecting_kmeans(datasets)
     # test_kmedians(datasets)
 

@@ -54,7 +54,7 @@ def test_dbscan(datasets):
     # dbscan.plot_k_neighbor_distance(datasets[1], k=min_samples)
     run_dbscan(datasets[1], eps=18.1, min_samples=min_samples)
 
-    print("Mixed Dataset ('Adult') clustering with DBScan")
+    print("Mixed Dataset ('hypothyroid') clustering with DBScan")
     min_samples = int(datasets[2].shape[1] + 1 + 0.001 * datasets[2].shape[0])
     # dbscan.plot_k_neighbor_distance(datasets[2], k=min_samples)
     run_dbscan(datasets[2], eps=75.49, min_samples=min_samples)
@@ -69,7 +69,7 @@ def test_kmeans(datasets):
     # kmeans.get_best_k(datasets[1], max_iterations=10)
     # run_kmeans(datasets[1], k=18, max_iterations=30)
 
-    print("Mixed Dataset ('Adult') clustering with K-Means")
+    print("Mixed Dataset ('hypothyroid') clustering with K-Means")
     # kmeans.get_best_k(datasets[2], max_iterations=10)
     # run_kmeans(datasets[2], k=2, max_iterations=30)
 
@@ -107,7 +107,7 @@ def test_kmedians(datasets):
     print("Numerical Dataset ('Kropt') clustering with K-Medians")
     run_kmedians(datasets[1], k=18, max_iterations=30)
     
-    print("Mixed Dataset ('Adult') clustering with K-Medians")
+    print("Mixed Dataset ('hypothyroid') clustering with K-Medians")
     run_kmedians(datasets[2], k=2, max_iterations=30)
 
 
@@ -118,12 +118,13 @@ def test_f_cmeans(datasets):
     print("Numerical Dataset ('Kropt') clustering with K-Medians")
     # run_f_cmeans(datasets[1], c=18, max_iterations=30)
 
-    print("Mixed Dataset ('Adult') clustering with K-Medians")
+    print("Mixed Dataset ('hypothyroid') clustering with K-Medians")
     # run_f_cmeans(datasets[2], c=2, max_iterations=30)
 
 
 if __name__ == '__main__':
     datasets = dr.get_datasets()
+    targets = dr.get_datasets_target()
 
     # test_dbscan(datasets)
 

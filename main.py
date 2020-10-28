@@ -140,6 +140,7 @@ def best_ks(datasets):
     number_k = [20, 25, 20]
     print_k = [False, True, False]
     print_silhouette = [True, True, True]
+
     for index in range(0, len(print_k)):
         tic = time.time()
         get_best_k_bisecting_kmeans(dataset=datasets[index], n_iterations=1, selector_type='std',
@@ -148,7 +149,7 @@ def best_ks(datasets):
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
-    for index in (len(print_k)):
+    for index in range(0, len(print_k)):
         tic = time.time()
         get_best_k_bisecting_kmeans(dataset=datasets[index], n_iterations=1, selector_type='dimension',
                                     max_k=number_k[index], print_k=print_k[index],
@@ -156,7 +157,7 @@ def best_ks(datasets):
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
-    for index in range(0, 3):
+    for index in range(0, len(print_k)):
         tic = time.time()
         print("Kmeans ------", index)
         kmeans.get_best_k(datasets[index], max_iterations=30, max_k=number_k[index], print_k=print_k[index],

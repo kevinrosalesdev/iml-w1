@@ -1,5 +1,5 @@
 from sklearn.metrics.pairwise import manhattan_distances
-from utils import error_plotter
+from utils import plotter
 import numpy as np
 
 
@@ -30,6 +30,6 @@ def apply_unsupervised_learning(dataset, k, max_iterations=30, plot_distances=Tr
         iteration += 1
 
     if plot_distances:
-        error_plotter.plot_error(iteration_distances)
+        plotter.plot_error(iteration_distances)
 
     return sample_cluster, iteration_distance

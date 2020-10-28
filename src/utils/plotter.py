@@ -19,11 +19,32 @@ def plot_k_error(k_error):
     plt.grid()
     plt.show()
 
+
 def plot_k_silhouette_score(s_scores):
     plt.plot(list(range(2, len(s_scores) + 2)), s_scores, 'o-')
     plt.ylabel('Silhouette score')
     plt.xlabel('K')
     plt.title('Silhouette score for each \'K\' value')
     plt.xticks(list(range(2, len(s_scores) + 2)))
+    plt.grid()
+    plt.show()
+
+
+def plot_k_calinski_harabasz_score(ch_score):
+    plt.plot(list(range(2, len(ch_score) + 2)), ch_score, 'o-')
+    plt.ylabel('Calinski-Harabasz score')
+    plt.xlabel('K')
+    plt.title('Calinski-Harabasz score score for each \'K\' value')
+    plt.xticks(list(range(2, len(ch_score) + 2)))
+    plt.grid()
+    plt.show()
+
+
+def plot_k_davies_bouldin_score(db_score):
+    plt.plot(list(range(2, len(db_score) + 2)), db_score, 'o-')
+    plt.ylabel('Davies-Bouldin score')
+    plt.xlabel('K')
+    plt.title('Davies-Bouldin score for each \'K\' value')
+    plt.xticks(list(range(2, len(db_score) + 2)))
     plt.grid()
     plt.show()

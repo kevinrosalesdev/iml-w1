@@ -212,6 +212,7 @@ def get_dataset_target(path):
 
 def get_datasets_target():
     datasets_target = []
-    datasets_target.append(get_dataset_target('datasets/pen-based.arff'))
-    datasets_target.append(get_dataset_target('datasets/kropt.arff'))
-    datasets_target.append(get_dataset_target('datasets/hypothyroid.arff'))
+    datasets_target.append(get_dataset_target('datasets/pen-based.arff'))# Numerical Big
+    datasets_target.append(get_dataset_target('datasets/kropt.arff'))# Categorical Huge
+    datasets_target.append(get_dataset_target('datasets/hypothyroid.arff'))# Mixed2 Small
+    return datasets_target

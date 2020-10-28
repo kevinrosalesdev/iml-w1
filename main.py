@@ -4,6 +4,11 @@ from clusteringgenerators.bisecting_kmeans import BisectingKMeans
 from collections import Counter
 import time
 import math
+import os
+from utils import error_plotter
+from sklearn.metrics import silhouette_score # (-1:1) higher score relates to a model with better defined clusters
+from sklearn.metrics import calinski_harabasz_score # The score is higher when clusters are dense and well separated
+from sklearn.metrics import davies_bouldin_score # minor value = 0 the closest is the value, the best is the separation
 
 
 def run_dbscan(dataset, eps, min_samples):
@@ -78,26 +83,35 @@ def test_bisecting_kmeans(datasets):
 
     for i in range(0, len(datasets)):
         tic = time.time()
-        bis_kmeans_dim = BisectingKMeans(10, 'dimension')
+        bis_kmeans_dim = BisectingKMeans(10, 1, 'dimension')
         bis_kmeans_dim.apply_unsupervised_learning(datasets[i])
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
     for i in range(0, len(datasets)):
         tic = time.time()
-        bis_kmeans_std = BisectingKMeans(10, 'std')
+        bis_kmeans_std = BisectingKMeans(10, 1, 'std')
         bis_kmeans_std.apply_unsupervised_learning(datasets[i])
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
 
-def stress_test_bisecting_kmeans(datasets):
+def get_best_k_bisecting_kmeans(dataset, n_iterations=1, selector_type='std', max_k=21, print_k=True,
+                                print_silhouette=True):
 
-    for i in range(1, 11):
-        bis_kmeans = BisectingKMeans(10, 'dimension')
-        print("Dimension of the dataset=", 100 * i)
-        print("__________________________________")
-        bis_kmeans.apply_unsupervised_learning(datasets[0].head(100 * i))
+    print("selector_type =", selector_type)
+    k_error = []
+    s_scores = []
+    for index in range(2, max_k+1):
+        print("k =", index)
+        bis_kmeans_dim = BisectingKMeans(n_clusters=index, n_iterations=n_iterations, selector_type=selector_type)
+        labels, k_error = bis_kmeans_dim.apply_unsupervised_learning(dataset)
+        if print_silhouette:
+            s_scores.append(silhouette_score(dataset, labels))
+    if print_k:
+        error_plotter.plot_k_error(k_error)
+    if print_silhouette:
+        error_plotter.plot_k_silhouette_score(s_scores=s_scores)
 
 
 def test_kmedians(datasets):
@@ -122,15 +136,40 @@ def test_f_cmeans(datasets):
     # run_f_cmeans(datasets[2], c=2, max_iterations=30)
 
 
+def best_ks(datasets):
+    number_k = [20, 25, 20]
+    print_k = [False, True, False]
+    print_silhouette = [True, True, True]
+    for index in range(0, len(print_k)):
+        tic = time.time()
+        get_best_k_bisecting_kmeans(dataset=datasets[index], n_iterations=1, selector_type='std',
+                                    max_k=number_k[index], print_k=print_k[index],
+                                    print_silhouette=print_silhouette[index])
+        toc = time.time()
+        print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
+
+    for index in (len(print_k)):
+        tic = time.time()
+        get_best_k_bisecting_kmeans(dataset=datasets[index], n_iterations=1, selector_type='dimension',
+                                    max_k=number_k[index], print_k=print_k[index],
+                                    print_silhouette=print_silhouette[index])
+        toc = time.time()
+        print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
+
+    for index in range(0, 3):
+        tic = time.time()
+        print("Kmeans ------", index)
+        kmeans.get_best_k(datasets[index], max_iterations=30, max_k=number_k[index], print_k=print_k[index],
+                          print_silhouette=print_silhouette[index])
+        toc = time.time()
+        print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
+
+
 if __name__ == '__main__':
     datasets = dr.get_datasets()
-    targets = dr.get_datasets_target()
-
-    # test_dbscan(datasets)
-
-    # test_kmeans(datasets)
-    test_bisecting_kmeans(datasets)
+    #targets = dr.get_datasets_target()
+    best_ks(datasets)
+    os.system('say "Esecuzione terminata, capra!"')
     # stress_test_bisecting_kmeans(datasets)
     # test_kmedians(datasets)
-
     #test_f_cmeans(datasets)

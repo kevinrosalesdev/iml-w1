@@ -1,10 +1,13 @@
 from sklearn.metrics.pairwise import euclidean_distances
 from utils import error_plotter
 import numpy as np
+from sklearn.metrics import silhouette_score
 
 
-def apply_unsupervised_learning(dataset, k, max_iterations=30, plot_distances=True):
-    np.random.seed(0)
+def apply_unsupervised_learning(dataset, k, max_iterations=30, use_default_seed=True, plot_distances=True):
+
+    if use_default_seed:
+        np.random.seed(0)
     np_dataset = dataset.to_numpy()
     centroids = [np_dataset[i] for i in np.random.randint(np_dataset.shape[0], size=k)]
     sample_cluster = -1 * np.ones(np_dataset.shape[0], dtype=int)
@@ -32,11 +35,18 @@ def apply_unsupervised_learning(dataset, k, max_iterations=30, plot_distances=Tr
     if plot_distances:
         error_plotter.plot_error(iteration_distances)
 
-    return sample_cluster, iteration_distance
+    return sample_cluster, iteration_distance, centroids
 
 
-def get_best_k(dataset, max_iterations=10):
-    k_error = [apply_unsupervised_learning(dataset, index, max_iterations, plot_distances=False)[1]
-               for index in range(1, 20)]
-    error_plotter.plot_k_error(k_error)
-
+def get_best_k(dataset, max_iterations=10, max_k=20, print_k=True, print_silhouette=True):
+    k_errors = []
+    s_scores = []
+    for index in range(2, max_k+1):
+        labels, k_error, _ = apply_unsupervised_learning(dataset, index, max_iterations, plot_distances=False)
+        k_errors.append(k_error)
+        if print_silhouette:
+            s_scores.append(silhouette_score(dataset, labels))
+    if print_k:
+        error_plotter.plot_k_error(k_errors)
+    if print_silhouette:
+        error_plotter.plot_k_silhouette_score(s_scores)

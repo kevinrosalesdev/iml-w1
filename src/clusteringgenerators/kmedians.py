@@ -1,6 +1,9 @@
 from sklearn.metrics.pairwise import manhattan_distances
 from utils import plotter
 import numpy as np
+from sklearn.metrics import silhouette_score
+from sklearn.metrics import calinski_harabasz_score
+from sklearn.metrics import davies_bouldin_score
 
 
 def apply_unsupervised_learning(dataset, k, max_iterations=30, plot_distances=True):
@@ -33,3 +36,29 @@ def apply_unsupervised_learning(dataset, k, max_iterations=30, plot_distances=Tr
         plotter.plot_error(iteration_distances)
 
     return sample_cluster, iteration_distance
+
+
+def get_best_k(dataset, max_iterations=10, max_k=20, print_k=True, print_silhouette=True,
+               print_calinski_harabasz=True, print_davies_bouldin=True):
+    k_errors = []
+    s_scores = []
+    ch_score = []
+    db_score = []
+    for index in range(2, max_k+1):
+        labels, k_error, _ = apply_unsupervised_learning(dataset, index, max_iterations, plot_distances=False)
+        k_errors.append(k_error)
+        if print_silhouette:
+            s_scores.append(silhouette_score(dataset, labels))
+        if print_calinski_harabasz:
+            ch_score.append(calinski_harabasz_score(dataset, labels))
+        if print_davies_bouldin:
+            db_score.append(davies_bouldin_score(dataset, labels))
+
+    if print_k:
+        plotter.plot_k_error(k_errors)
+    if print_silhouette:
+        plotter.plot_k_silhouette_score(s_scores)
+    if print_calinski_harabasz:
+        plotter.plot_k_calinski_harabasz_score(ch_score)
+    if print_davies_bouldin:
+        plotter.plot_k_davies_bouldin_score(db_score)

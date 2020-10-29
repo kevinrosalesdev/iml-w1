@@ -129,12 +129,15 @@ def get_best_k_bisecting_kmeans(dataset, n_iterations=1, selector_type='std', ma
 
 def test_kmedians(datasets):
     print("Numerical Dataset ('Pen-based') clustering with K-Medians")
+    kmedians.get_best_k(datasets[0], max_iterations=10)
     run_kmedians(datasets[0], k=10, max_iterations=30)
     
     print("Numerical Dataset ('Kropt') clustering with K-Medians")
+    kmedians.get_best_k(datasets[1], max_iterations=10)
     run_kmedians(datasets[1], k=18, max_iterations=30)
     
     print("Mixed Dataset ('hypothyroid') clustering with K-Medians")
+    kmedians.get_best_k(datasets[2], max_iterations=10)
     run_kmedians(datasets[2], k=2, max_iterations=30)
 
 
@@ -178,7 +181,7 @@ def best_k_bis_kmeans_plots(datasets):
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
         """
 
-    for index in range(0, 3):
+    for index in range(0, len(print_k)):
         tic = time.time()
         print("Kmeans ------", index)
         kmeans.get_best_k(datasets[index], max_iterations=30, max_k=number_k[index], print_k=print_k[index],
@@ -188,6 +191,15 @@ def best_k_bis_kmeans_plots(datasets):
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
+     for index in range(0, len(print_k)):
+        tic = time.time()
+        print("Kmedians ------", index)
+        kmedians.get_best_k(datasets[index], max_iterations=30, max_k=number_k[index], print_k=print_k[index],
+                          print_silhouette=print_silhouette[index],
+                          print_calinski_harabasz=print_calinski_harabasz[index],
+                          print_davies_bouldin=print_davies_bouldin[index])
+        toc = time.time()
+        print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
 
 

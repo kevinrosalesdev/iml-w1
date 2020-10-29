@@ -92,8 +92,8 @@ class BisectingKMeans:
         best_labels = []
         min_iteration_distance = float('inf')
         while iteration < self.n_iterations:
-            labels, iteration_distance, centroids = kmeans.apply_unsupervised_learning(branch_to_divide, 2, use_default_seed=True,
-                                                                            plot_distances=False)
+            labels, iteration_distance, centroids = kmeans.apply_unsupervised_learning(branch_to_divide, 2,
+                                                                use_default_seed=False, plot_distances=False)
             # print(f"iteration={iteration}, iteration_distance={iteration_distance}")
             if iteration_distance < min_iteration_distance:
                 min_iteration_distance = iteration_distance

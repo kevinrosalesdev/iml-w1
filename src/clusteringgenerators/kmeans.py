@@ -6,7 +6,7 @@ from sklearn.metrics import calinski_harabasz_score
 from sklearn.metrics import davies_bouldin_score
 
 
-def apply_unsupervised_learning(dataset, k, max_iterations=30, use_default_seed=True, plot_distances=True):
+def apply_unsupervised_learning(dataset, k, max_iterations=30, use_default_seed=True, plot_distances=False):
 
     if use_default_seed:
         np.random.seed(0)
@@ -40,7 +40,7 @@ def apply_unsupervised_learning(dataset, k, max_iterations=30, use_default_seed=
     return sample_cluster, iteration_distance, centroids
 
 
-def get_best_k(dataset, max_iterations=10, max_k=20, print_k=True, print_silhouette=True,
+def get_best_k(dataset, max_iterations=30, max_k=20, print_k=True, print_silhouette=True,
                print_calinski_harabasz=True, print_davies_bouldin=True):
     k_errors = []
     s_scores = []

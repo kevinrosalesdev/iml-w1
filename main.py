@@ -6,6 +6,7 @@ import time
 import math
 import os
 from utils import plotter
+# Internal Metrics
 from sklearn.metrics import silhouette_score # (-1:1) higher score relates to a model with better defined clusters
 from sklearn.metrics import calinski_harabasz_score # The score is higher when clusters are dense and well separated
 from sklearn.metrics import davies_bouldin_score # minor value = 0 the closest is the value, the best is the separation
@@ -71,12 +72,12 @@ def test_kmeans(datasets):
     run_kmeans(datasets[0], k=10, max_iterations=30)
 
     print("Categorical Dataset ('Kropt') clustering with K-Means")
-    # kmeans.get_best_k(datasets[1], max_iterations=10)
-    # run_kmeans(datasets[1], k=18, max_iterations=30)
+    kmeans.get_best_k(datasets[1], max_iterations=10)
+    run_kmeans(datasets[1], k=18, max_iterations=30)
 
     print("Mixed Dataset ('hypothyroid') clustering with K-Means")
-    # kmeans.get_best_k(datasets[2], max_iterations=10)
-    # run_kmeans(datasets[2], k=2, max_iterations=30)
+    kmeans.get_best_k(datasets[2], max_iterations=10)
+    run_kmeans(datasets[2], k=2, max_iterations=30)
 
 
 def test_bisecting_kmeans(datasets):
@@ -150,8 +151,8 @@ def test_f_cmeans(datasets):
 
 def best_k_bis_kmeans_plots(datasets):
     number_k = [20, 25, 20]
-    print_k = [False, False, False]
-    print_silhouette = [False, False, False]
+    print_k = [True, True, True]
+    print_silhouette = [True, True, True]
     print_calinski_harabasz = [True, True, True]
     print_davies_bouldin = [True, True, True]
 
@@ -165,7 +166,8 @@ def best_k_bis_kmeans_plots(datasets):
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
-    for index in (len(print_k)):
+        """ 
+    for index in range(0, len(print_k)):
         tic = time.time()
         get_best_k_bisecting_kmeans(dataset=datasets[index], n_iterations=1, selector_type='dimension',
                                     max_k=number_k[index], print_k=print_k[index],
@@ -174,6 +176,7 @@ def best_k_bis_kmeans_plots(datasets):
                                     print_davies_bouldin=print_davies_bouldin[index])
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
+        """
 
     for index in range(0, 3):
         tic = time.time()
@@ -186,14 +189,51 @@ def best_k_bis_kmeans_plots(datasets):
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
 
+
+
+def validate_best_k_bis_kmeans(dataset, targets):
+    #test lines
+    # best_k_bisecting = [3]
+    # best_k_kmeans = [3]
+    best_k_bisecting = [10, 18, 15]
+    best_k_kmeans = [7, 23, 6]
+
+    for index in range(0, len(best_k_bisecting)):
+        tic = time.time()
+        bis_kmeans = BisectingKMeans(n_clusters=best_k_bisecting[index], n_iterations=3, selector_type='std')
+        predicted_labels, k_error = bis_kmeans.apply_unsupervised_learning(dataset[index])
+        toc = time.time()
+        print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
+
+        target_labels = targets[index]
+        plotter.plot_confusion_matrix(target_labels, predicted_labels)
+        plotter.plot_pca_2D(dataset[index], predicted_labels)
+
+    for index in range(0, len(best_k_kmeans)):
+        tic = time.time()
+        print("Kmeans ------", index)
+        predicted_labels, iteration_distance, centroids = kmeans.apply_unsupervised_learning(dataset[index],
+                                                        best_k_kmeans[index], max_iterations=30,
+                                                        use_default_seed=True, plot_distances=False)
+        toc = time.time()
+        print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
+        target_labels = targets[index]
+        plotter.plot_confusion_matrix(target_labels, predicted_labels)
+        plotter.plot_pca_2D(dataset[index], predicted_labels)
+
+    print("Plotting PCA DATASET WITH REAL LABELS")
+    for index in range(0, len(best_k_kmeans)):
+        target_labels = targets[index]
+        plotter.plot_pca_2D(dataset[index], target_labels)
+
+
 if __name__ == '__main__':
-    try:
-        datasets = dr.get_datasets()
-        #targets = dr.get_datasets_target()
-        best_k_bis_kmeans_plots(datasets)
-        os.system('say "Esecuzione terminata, capra!"')
-        # stress_test_bisecting_kmeans(datasets)
-        # test_kmedians(datasets)
-        #test_f_cmeans(datasets)
-    except:
-        os.system('say "errore errore errore"')
+    datasets_preprocessed = dr.get_datasets()
+    targets_labels = dr.get_datasets_target()
+    # best_k_bis_kmeans_plots(datasets_preprocessed)
+    # validate_best_k_bis_kmeans(datasets_preprocessed, targets_labels)
+    # stress_test_bisecting_kmeans(datasets_preprocessed)
+    # test_kmedians(datasets_preprocessed)
+    # test_f_cmeans(datasets_preprocessed)
+    # os.system('say "Esecuzione terminata, capra!"')
+

@@ -56,7 +56,7 @@ def plot_k_davies_bouldin_score(db_score):
     plt.show()
 
 
-def plot_confusion_matrix(target, predicted):
+def plot_confusion_matrix(target, predicted, plot_title='', is_real_k=False):
     conf_matrix = confusion_matrix(target, predicted)
     unique_target = list(set(target))
     unique_predicted = list(set(predicted))
@@ -67,9 +67,13 @@ def plot_confusion_matrix(target, predicted):
     else:
         conf_matrix_df = pd.DataFrame(conf_matrix, index=unique_target, columns=unique_predicted)
 
-    sn.heatmap(conf_matrix_df, annot=True, fmt='g', cmap='Blues', linewidths=0.5)
+    cmap_value = 'Blues'
+    if is_real_k:
+        cmap_value = 'Reds'
+    sn.heatmap(conf_matrix_df, annot=True, fmt='g', cmap=cmap_value, linewidths=0.5)
     plt.xlabel('Predicted')
     plt.ylabel('True')
+    plt.title(plot_title)
     plt.show()
 
 
@@ -85,9 +89,10 @@ def modify_labels_length_drop_zeros(conf_matrix, list_to_change, list_target, ha
     return conf_matrix_df
 
 
-def plot_pca_2D(dataset, labels):
+def plot_pca_2D(dataset, labels, plot_title=''):
     pca = PCA(n_components=2)
     df_2D = pd.DataFrame(pca.fit_transform(dataset), columns=['PCA1', 'PCA2'])
     df_2D['Cluster'] = labels
     sn.lmplot(x="PCA1", y="PCA2", data=df_2D, fit_reg=False, hue='Cluster', legend=True, scatter_kws={"s": 80})
+    plt.title(plot_title)
     plt.show()

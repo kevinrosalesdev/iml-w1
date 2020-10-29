@@ -191,7 +191,7 @@ def best_k_bis_kmeans_plots(datasets):
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
-     for index in range(0, len(print_k)):
+    for index in range(0, len(print_k)):
         tic = time.time()
         print("Kmedians ------", index)
         kmedians.get_best_k(datasets[index], max_iterations=30, max_k=number_k[index], print_k=print_k[index],
@@ -205,45 +205,80 @@ def best_k_bis_kmeans_plots(datasets):
 
 def validate_best_k_bis_kmeans(dataset, targets):
     #test lines
-    # best_k_bisecting = [3]
-    # best_k_kmeans = [3]
+    #best_k_bisecting = [3]
+    #best_k_kmeans = [3]
+    #real_k = [2]
+    dataset_names = ["Pen-based (num)", "Kropt (cat)", "Hypothyroid (mxd)"]
+
     best_k_bisecting = [10, 18, 15]
     best_k_kmeans = [7, 23, 6]
+    real_k = [10, 18, 4]
 
     for index in range(0, len(best_k_bisecting)):
+        target_labels = targets[index]
+
         tic = time.time()
         bis_kmeans = BisectingKMeans(n_clusters=best_k_bisecting[index], n_iterations=3, selector_type='std')
         predicted_labels, k_error = bis_kmeans.apply_unsupervised_learning(dataset[index])
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
-        target_labels = targets[index]
-        plotter.plot_confusion_matrix(target_labels, predicted_labels)
-        plotter.plot_pca_2D(dataset[index], predicted_labels)
+        plotter.plot_confusion_matrix(target_labels, predicted_labels,
+                                      plot_title=f"{dataset_names[index]} - Bisecting K-Means K={best_k_bisecting[index]}", is_real_k=False)
+        plotter.plot_pca_2D(dataset[index], predicted_labels,
+                            plot_title=f"{dataset_names[index]} - Bisecting K-Means K={best_k_bisecting[index]}")
+
+        if real_k[index] != best_k_bisecting[index]:
+            tic = time.time()
+            bis_kmeans_real = BisectingKMeans(n_clusters=real_k[index], n_iterations=3, selector_type='std')
+            pred_labels, k_error = bis_kmeans_real.apply_unsupervised_learning(dataset[index])
+            toc = time.time()
+            print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
+
+            plotter.plot_confusion_matrix(target_labels, pred_labels,
+                                          plot_title=f"{dataset_names[index]} - Bisecting K-Means K={real_k[index]}", is_real_k=True)
+            plotter.plot_pca_2D(dataset[index], pred_labels,
+                                plot_title=f"{dataset_names[index]} - Bisecting K-Means K={real_k[index]}")
+
 
     for index in range(0, len(best_k_kmeans)):
+        target_labels = targets[index]
+
         tic = time.time()
-        print("Kmeans ------", index)
+        print("K-Means ------", index)
         predicted_labels, iteration_distance, centroids = kmeans.apply_unsupervised_learning(dataset[index],
                                                         best_k_kmeans[index], max_iterations=30,
                                                         use_default_seed=True, plot_distances=False)
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
-        target_labels = targets[index]
-        plotter.plot_confusion_matrix(target_labels, predicted_labels)
-        plotter.plot_pca_2D(dataset[index], predicted_labels)
+        plotter.plot_confusion_matrix(target_labels, predicted_labels,
+                                      plot_title=f"{dataset_names[index]} - K-Means K={best_k_kmeans[index]}", is_real_k=False)
+        plotter.plot_pca_2D(dataset[index], predicted_labels,
+                            plot_title=f"{dataset_names[index]} - K-Means K={best_k_kmeans[index]}")
+
+        if real_k[index] != best_k_kmeans[index]:
+            tic = time.time()
+            pred_labels, iteration_distance, centroids = kmeans.apply_unsupervised_learning(dataset[index],
+                                                        real_k[index], max_iterations=30,
+                                                        use_default_seed=True, plot_distances=False)
+            toc = time.time()
+            print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
+            plotter.plot_confusion_matrix(target_labels, pred_labels,
+                                          plot_title=f"{dataset_names[index]} - K-Means K={real_k[index]}", is_real_k=True)
+            plotter.plot_pca_2D(dataset[index], pred_labels,
+                                plot_title=f"{dataset_names[index]} - K-Means K={real_k[index]}")
 
     print("Plotting PCA DATASET WITH REAL LABELS")
     for index in range(0, len(best_k_kmeans)):
         target_labels = targets[index]
-        plotter.plot_pca_2D(dataset[index], target_labels)
+        plotter.plot_pca_2D(dataset[index], target_labels, plot_title=f"{dataset_names[index]} Real classes K={real_k[index]}")
 
 
 if __name__ == '__main__':
     datasets_preprocessed = dr.get_datasets()
     targets_labels = dr.get_datasets_target()
     # best_k_bis_kmeans_plots(datasets_preprocessed)
-    # validate_best_k_bis_kmeans(datasets_preprocessed, targets_labels)
+    validate_best_k_bis_kmeans(datasets_preprocessed, targets_labels)
     # stress_test_bisecting_kmeans(datasets_preprocessed)
     # test_kmedians(datasets_preprocessed)
     # test_f_cmeans(datasets_preprocessed)

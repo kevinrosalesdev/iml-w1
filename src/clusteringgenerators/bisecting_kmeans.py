@@ -1,8 +1,13 @@
 from clusteringgenerators import kmeans
+from utils import plotter
+from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
 import pandas as pd
-from sklearn.metrics.pairwise import euclidean_distances
 
+# Internal Metrics
+from sklearn.metrics import silhouette_score  # (-1:1) higher score relates to a model with better defined clusters
+from sklearn.metrics import calinski_harabasz_score  # The score is higher when clusters are dense and well separated
+from sklearn.metrics import davies_bouldin_score  # minor value = 0 the closest is the value, the best is the separation
 
 
 class BisectingKMeans:
@@ -47,7 +52,7 @@ class BisectingKMeans:
             for map_key in map_keys:
                 subs = self.sub_dataset_map[map_key][0]
                 centroid = self.sub_dataset_map[map_key][1]
-                total_sse += self.compute_sse(subs, centroid)
+                total_sse += compute_sse(subs, centroid)
             iteration_distances.append(total_sse)
         # print(f"END WHILE --> Number of clusters found = {len(self.sub_dataset_map)}")
         predictions = pd.Series(np.zeros(len(X), dtype=int), index=X.index)
@@ -93,7 +98,8 @@ class BisectingKMeans:
         min_iteration_distance = float('inf')
         while iteration < self.n_iterations:
             labels, iteration_distance, centroids = kmeans.apply_unsupervised_learning(branch_to_divide, 2,
-                                                                use_default_seed=False, plot_distances=False)
+                                                                                       use_default_seed=False,
+                                                                                       plot_distances=False)
             # print(f"iteration={iteration}, iteration_distance={iteration_distance}")
             if iteration_distance < min_iteration_distance:
                 min_iteration_distance = iteration_distance
@@ -101,8 +107,39 @@ class BisectingKMeans:
             iteration += 1
         return best_labels, min_iteration_distance, centroids
 
-    def compute_sse(self, dataset, centroid):
-        np_dataset = dataset.to_numpy()
-        centroid_2d = centroid.reshape(1, -1)
-        distances_to_clusters = euclidean_distances(np_dataset, centroid_2d)
-        return np.sum(distances_to_clusters)
+
+def compute_sse(dataset, centroid):
+    np_dataset = dataset.to_numpy()
+    centroid_2d = centroid.reshape(1, -1)
+    distances_to_clusters = euclidean_distances(np_dataset, centroid_2d)
+    return np.sum(distances_to_clusters)
+
+
+def get_best_k(dataset, n_iterations=1, selector_type='std', max_k=20, print_k=True,
+               print_silhouette=True,
+               print_calinski_harabasz=True,
+               print_davies_bouldin=True):
+    print("selector_type =", selector_type)
+    k_error = []
+    s_scores = []
+    ch_score = []
+    db_score = []
+    for index in range(2, max_k + 1):
+        print("k =", index)
+        bis_kmeans_dim = BisectingKMeans(n_clusters=index, n_iterations=n_iterations, selector_type=selector_type)
+        labels, k_error = bis_kmeans_dim.apply_unsupervised_learning(dataset)
+        if print_silhouette:
+            s_scores.append(silhouette_score(dataset, labels))
+        if print_calinski_harabasz:
+            ch_score.append(calinski_harabasz_score(dataset, labels))
+        if print_davies_bouldin:
+            db_score.append(davies_bouldin_score(dataset, labels))
+
+    if print_k:
+        plotter.plot_k_error(k_error)
+    if print_silhouette:
+        plotter.plot_k_silhouette_score(s_scores=s_scores)
+    if print_calinski_harabasz:
+        plotter.plot_k_calinski_harabasz_score(ch_score=ch_score)
+    if print_davies_bouldin:
+        plotter.plot_k_davies_bouldin_score(db_score=db_score)

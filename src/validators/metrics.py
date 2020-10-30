@@ -11,7 +11,7 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans'):
     real_k = [10, 18, 4]
 
     if algorithm == "b-kmeans":
-        for index in range(1, len(best_k_bisecting) - 1):
+        for index in range(0, len(best_k_bisecting)):
             target_labels = targets[index]
 
             tic = time.time()

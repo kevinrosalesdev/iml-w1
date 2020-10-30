@@ -93,6 +93,7 @@ def plot_pca_2D(dataset, labels, plot_title=''):
     pca = PCA(n_components=2)
     df_2D = pd.DataFrame(pca.fit_transform(dataset), columns=['PCA1', 'PCA2'])
     df_2D['Cluster'] = labels
-    sn.lmplot(x="PCA1", y="PCA2", data=df_2D, fit_reg=False, hue='Cluster', legend=True, scatter_kws={"s": 80})
+    sn.lmplot(x="PCA1", y="PCA2", data=df_2D, fit_reg=False, hue='Cluster', legend=False, scatter_kws={"s": 10})
+    plt.legend(title='Cluster', loc='best', prop={'size': 6})
     plt.title(plot_title)
     plt.show()

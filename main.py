@@ -1,8 +1,7 @@
 from arffdatasetreader import dataset_reader as dr
-from clusteringgenerators import dbscan, kmeans, kmedians, f_cmeans
-from clusteringgenerators.bisecting_kmeans import BisectingKMeans
-from collections import Counter
+from clusteringgenerators import dbscan, kmeans, kmedians, f_cmeans, bisecting_kmeans
 from validators import metrics
+from collections import Counter
 import time
 import math
 
@@ -78,14 +77,14 @@ def test_kmeans(datasets):
 def test_bisecting_kmeans(datasets):
     for i in range(0, len(datasets)):
         tic = time.time()
-        bis_kmeans_dim = BisectingKMeans(10, 1, 'dimension')
+        bis_kmeans_dim = bisecting_kmeans.BisectingKMeans(10, 1, 'dimension')
         bis_kmeans_dim.apply_unsupervised_learning(datasets[i])
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
     for i in range(0, len(datasets)):
         tic = time.time()
-        bis_kmeans_std = BisectingKMeans(10, 1, 'std')
+        bis_kmeans_std = bisecting_kmeans.BisectingKMeans(10, 1, 'std')
         bis_kmeans_std.apply_unsupervised_learning(datasets[i])
         toc = time.time()
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
@@ -106,22 +105,29 @@ def test_kmedians(datasets):
 
 
 def test_f_cmeans(datasets):
-    print("Numerical Dataset ('Pen-based') clustering with K-Medians")
+    print("Numerical Dataset ('Pen-based') clustering with Fuzzy C-Means")
     run_f_cmeans(datasets[0], c=10, max_iterations=5, m=2)
 
-    print("Numerical Dataset ('Kropt') clustering with K-Medians")
+    print("Numerical Dataset ('Kropt') clustering with Fuzzy C-Means")
     # run_f_cmeans(datasets[1], c=18, max_iterations=30)
 
-    print("Mixed Dataset ('hypothyroid') clustering with K-Medians")
+    print("Mixed Dataset ('hypothyroid') clustering with Fuzzy C-Means")
     # run_f_cmeans(datasets[2], c=2, max_iterations=30)
 
 
 if __name__ == '__main__':
     datasets_preprocessed = dr.get_datasets()
     targets_labels = dr.get_datasets_target()
-    # best_k_bis_kmeans_plots(datasets_preprocessed)
-    metrics.get_cf_and_pca(datasets_preprocessed, targets_labels)
-    # stress_test_bisecting_kmeans(datasets_preprocessed)
+
+    # f_cmeans.get_best_c(datasets_preprocessed[2], max_c=5)
+    metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='f-cmeans')
+
+
+    # test_dbscan(datasets_preprocessed)
+    # test_kmeans()
+    # test_bisecting_kmeans(datasets_preprocessed)
     # test_kmedians(datasets_preprocessed)
     # test_f_cmeans(datasets_preprocessed)
-    # os.system('say "Esecuzione terminata, capra!"')
+
+    # metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='b-kmeans')
+    # metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')

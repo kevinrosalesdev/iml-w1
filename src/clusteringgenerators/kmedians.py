@@ -45,7 +45,7 @@ def get_best_k(dataset, max_iterations=10, max_k=20, print_k=True, print_silhoue
     ch_score = []
     db_score = []
     for index in range(2, max_k+1):
-        labels, k_error, _ = apply_unsupervised_learning(dataset, index, max_iterations, plot_distances=False)
+        labels, k_error = apply_unsupervised_learning(dataset, index, max_iterations, plot_distances=False)
         k_errors.append(k_error)
         if print_silhouette:
             s_scores.append(silhouette_score(dataset, labels))

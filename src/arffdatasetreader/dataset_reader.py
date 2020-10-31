@@ -165,7 +165,7 @@ def process_mix_data2(path):
         le = LabelEncoder()
         mixed2_df[column] = le.fit_transform(mixed2_df[column])
 
-    # One hot encoding for the last one
+    # One hot encoding for the last one 'referral source'
     mixed2_df_encoded = pd.get_dummies(mixed2_df)
 
     # Normalizing

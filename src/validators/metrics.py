@@ -15,7 +15,7 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans'):
 
     real_k = [10, 18, 4]
 
-    for index in range(0, 1):
+    for index in range(0, len(real_k)):
         target_labels = targets[index]
 
         tic = time.time()
@@ -24,7 +24,7 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans'):
                                                           selector_type='std')
             predicted_labels, k_error = bis_kmeans.apply_unsupervised_learning(dataset[index])
         elif algorithm == 'kmeans':
-            predicted_labels, iteration_distance = kmeans.apply_unsupervised_learning(dataset[index],
+            predicted_labels, iteration_distance, _ = kmeans.apply_unsupervised_learning(dataset[index],
                                                                                       best_k[index],
                                                                                       max_iterations=30,
                                                                                       use_default_seed=True,
@@ -48,7 +48,7 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans'):
                                                                    selector_type='std')
                 pred_labels, k_error = bis_kmeans_real.apply_unsupervised_learning(dataset[index])
             elif algorithm == 'kmeans':
-                predicted_labels, iteration_distance = kmeans.apply_unsupervised_learning(dataset[index],
+                predicted_labels, iteration_distance, _ = kmeans.apply_unsupervised_learning(dataset[index],
                                                                                           real_k[index],
                                                                                           max_iterations=30,
                                                                                           use_default_seed=True,

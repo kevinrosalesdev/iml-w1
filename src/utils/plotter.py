@@ -26,6 +26,26 @@ def plot_k_error(k_error):
     plt.show()
 
 
+def plot_c_error(c_error):
+    plt.plot(list(range(2, len(c_error) + 2)), c_error, 'o-')
+    plt.ylabel('Sum of distances from each sample to its nearest cluster')
+    plt.xlabel('C')
+    plt.title('Sum of distances for each \'C\' value')
+    plt.xticks(list(range(2, len(c_error) + 2)))
+    plt.grid()
+    plt.show()
+
+
+def plot_performance_index(performance_index):
+    plt.plot(list(range(2, len(performance_index) + 2)), performance_index, 'o-')
+    plt.ylabel('Performance Index value')
+    plt.xlabel('Number of clusters (C Value)')
+    plt.title('Performance Index for optimal clusters')
+    plt.xticks(list(range(2, len(performance_index) + 2)))
+    plt.grid()
+    plt.show()
+
+
 def plot_k_silhouette_score(s_scores):
     plt.plot(list(range(2, len(s_scores) + 2)), s_scores, 'o-')
     plt.ylabel('Silhouette score')

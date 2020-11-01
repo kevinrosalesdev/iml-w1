@@ -10,47 +10,47 @@ def test_dbscan(datasets):
     print("Numerical Dataset ('Pen-based') clustering with DBScan with 'auto'")
     min_samples = int(datasets[0].shape[1] + 1 + 0.001 * datasets[0].shape[0])
     dbscan.plot_k_neighbor_distance(datasets[0], k=min_samples)
-    dbscan.run_dbscan(datasets[0], eps=0.4, min_samples=min_samples, algorithm='auto')
+    dbscan.run_dbscan(datasets[0], eps=0.4425, min_samples=min_samples, algorithm='auto')
 
     print("Categorical Dataset ('Kropt') clustering with DBScan with 'auto'")
     min_samples = int(datasets[1].shape[1] + 1 + 0.001 * datasets[1].shape[0])
     dbscan.plot_k_neighbor_distance(datasets[1], k=min_samples)
-    dbscan.run_dbscan(datasets[1], eps=0.85, min_samples=min_samples, algorithm='auto')
+    dbscan.run_dbscan(datasets[1], eps=0.875, min_samples=min_samples, algorithm='auto')
 
     print("Mixed Dataset ('hypothyroid') clustering with DBScan with 'auto'")
     min_samples = int(datasets[2].shape[1] + 1 + 0.001 * datasets[2].shape[0])
     dbscan.plot_k_neighbor_distance(datasets[2], k=min_samples)
-    dbscan.run_dbscan(datasets[2], eps=3.3, min_samples=min_samples, algorithm='auto')
+    dbscan.run_dbscan(datasets[2], eps=4.5, min_samples=min_samples, algorithm='auto')
     
-    print("Numerical Dataset ('Pen-based') clustering with DBScan with 'ball_tree'")
-    min_samples = int(datasets[0].shape[1] + 1 + 0.001 * datasets[0].shape[0])
-    dbscan.plot_k_neighbor_distance(datasets[0], k=min_samples)
-    dbscan.run_dbscan(datasets[0], eps=0.40, min_samples=min_samples, algorithm='ball_tree')
-
-    print("Categorical Dataset ('Kropt') clustering with DBScan with 'ball_tree'")
-    min_samples = int(datasets[1].shape[1] + 1 + 0.001 * datasets[1].shape[0])
-    dbscan.plot_k_neighbor_distance(datasets[1], k=min_samples)
-    dbscan.run_dbscan(datasets[1], eps=0.85, min_samples=min_samples, algorithm='ball_tree')
-
-    print("Mixed Dataset ('hypothyroid') clustering with DBScan with 'ball_tree'")
-    min_samples = int(datasets[2].shape[1] + 1 + 0.001 * datasets[2].shape[0])
-    dbscan.plot_k_neighbor_distance(datasets[2], k=min_samples)
-    dbscan.run_dbscan(datasets[2], eps=3.30, min_samples=min_samples, algorithm='ball_tree')
-   
-    print("Numerical Dataset ('Pen-based') clustering with DBScan with 'kd_tree'")
-    min_samples = int(datasets[0].shape[1] + 1 + 0.001 * datasets[0].shape[0])
-    dbscan.plot_k_neighbor_distance(datasets[0], k=min_samples)
-    dbscan.run_dbscan(datasets[0], eps=0.4, min_samples=min_samples, algorithm='kd_tree')
-
-    print("Categorical Dataset ('Kropt') clustering with DBScan with 'kd_tree'")
-    min_samples = int(datasets[1].shape[1] + 1 + 0.001 * datasets[1].shape[0])
-    dbscan.plot_k_neighbor_distance(datasets[1], k=min_samples)
-    dbscan.run_dbscan(datasets[1], eps=0.85, min_samples=min_samples, algorithm='kd_tree')
-
-    print("Mixed Dataset ('hypothyroid') clustering with DBScan with 'kd_tree'")
-    min_samples = int(datasets[2].shape[1] + 1 + 0.001 * datasets[2].shape[0])
-    dbscan.plot_k_neighbor_distance(datasets[2], k=min_samples)
-    dbscan.run_dbscan(datasets[2], eps=3.3, min_samples=min_samples, algorithm='kd_tree')
+    # print("Numerical Dataset ('Pen-based') clustering with DBScan with 'ball_tree'")
+    # min_samples = int(datasets[0].shape[1] + 1 + 0.001 * datasets[0].shape[0])
+    # dbscan.plot_k_neighbor_distance(datasets[0], k=min_samples)
+    # dbscan.run_dbscan(datasets[0], eps=0.40, min_samples=min_samples, algorithm='ball_tree')
+    #
+    # print("Categorical Dataset ('Kropt') clustering with DBScan with 'ball_tree'")
+    # min_samples = int(datasets[1].shape[1] + 1 + 0.001 * datasets[1].shape[0])
+    # dbscan.plot_k_neighbor_distance(datasets[1], k=min_samples)
+    # dbscan.run_dbscan(datasets[1], eps=0.85, min_samples=min_samples, algorithm='ball_tree')
+    #
+    # print("Mixed Dataset ('hypothyroid') clustering with DBScan with 'ball_tree'")
+    # min_samples = int(datasets[2].shape[1] + 1 + 0.001 * datasets[2].shape[0])
+    # dbscan.plot_k_neighbor_distance(datasets[2], k=min_samples)
+    # dbscan.run_dbscan(datasets[2], eps=3.30, min_samples=min_samples, algorithm='ball_tree')
+    #
+    # print("Numerical Dataset ('Pen-based') clustering with DBScan with 'kd_tree'")
+    # min_samples = int(datasets[0].shape[1] + 1 + 0.001 * datasets[0].shape[0])
+    # dbscan.plot_k_neighbor_distance(datasets[0], k=min_samples)
+    # dbscan.run_dbscan(datasets[0], eps=0.4, min_samples=min_samples, algorithm='kd_tree')
+    #
+    # print("Categorical Dataset ('Kropt') clustering with DBScan with 'kd_tree'")
+    # min_samples = int(datasets[1].shape[1] + 1 + 0.001 * datasets[1].shape[0])
+    # dbscan.plot_k_neighbor_distance(datasets[1], k=min_samples)
+    # dbscan.run_dbscan(datasets[1], eps=0.85, min_samples=min_samples, algorithm='kd_tree')
+    #
+    # print("Mixed Dataset ('hypothyroid') clustering with DBScan with 'kd_tree'")
+    # min_samples = int(datasets[2].shape[1] + 1 + 0.001 * datasets[2].shape[0])
+    # dbscan.plot_k_neighbor_distance(datasets[2], k=min_samples)
+    # dbscan.run_dbscan(datasets[2], eps=3.3, min_samples=min_samples, algorithm='kd_tree')
     
 
 def test_kmeans(datasets):
@@ -124,10 +124,10 @@ if __name__ == '__main__':
 
     # ADD ONE variable of algorithms_params  TO THE FUNCTIONS BELOW TO RUN THE BEST K PLOTS WITH THE CLUSTERING METRICS
     # OR THE CONFUSION MATRIX AND PCA PLOTS
-    algorithms_params = ['kmeans', 'kmedians', 'b-kmeans', 'f-cmeans']
+    algorithms_params = ['dbscan', 'kmeans', 'kmedians', 'b-kmeans', 'f-cmeans']
 
     # metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')
-    # metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='kmeans')
+    metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='dbscan')
 
     # TO RUN THEM ALL
     # for alg in algorithms_params:

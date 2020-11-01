@@ -127,7 +127,7 @@ if __name__ == '__main__':
     algorithms_params = ['dbscan', 'kmeans', 'kmedians', 'b-kmeans', 'f-cmeans']
 
     # metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')
-    metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm=algorithms_params[4])
+    # metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm=algorithms_params[1])
 
     # TO RUN THEM ALL
     # for alg in algorithms_params:

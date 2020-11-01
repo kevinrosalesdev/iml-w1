@@ -5,12 +5,12 @@ import numpy as np
 from collections import Counter
 
 
-def apply_unsupervised_learning(dataset, eps, min_samples):
+def apply_unsupervised_learning(dataset, eps, min_samples, algorithm):
     if min_samples < dataset.shape[1] + 1 or min_samples < 3:
         print("[WARNING] 'min_samples' parameter should be greater than D(features) + 1 and at least 3")
 
     print("Parameters (eps=" + str(eps) + ", min_samples=" + str(min_samples) + ")")
-    dbscan = DBSCAN(eps=eps, min_samples=min_samples, metric='euclidean')
+    dbscan = DBSCAN(eps=eps, min_samples=min_samples, metric='euclidean', algorithm = algorithm)
     model = dbscan.fit(dataset)
     return model
 
@@ -34,7 +34,7 @@ def plot_k_neighbor_distance(dataset, k):
     plt.show()
 
 
-def run_dbscan(dataset, eps, min_samples):
+def run_dbscan(dataset, eps, min_samples, algorithm):
     print(dataset.head())
     model = apply_unsupervised_learning(dataset, eps, min_samples)
     labels = model.labels_

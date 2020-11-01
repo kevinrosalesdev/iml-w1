@@ -1,6 +1,5 @@
 from arffdatasetreader import dataset_reader as dr
 from clusteringgenerators import dbscan, kmeans, kmedians, f_cmeans, bisecting_kmeans
-from validators import metrics
 import time
 import math
 

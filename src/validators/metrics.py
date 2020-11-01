@@ -32,17 +32,18 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans', plot_pca_real_labels=
             pred_labels, k_error = bis_kmeans.apply_unsupervised_learning(dataset[index])
         elif algorithm == 'kmeans':
             pred_labels, iteration_distance, _ = kmeans.apply_unsupervised_learning(dataset[index],
-                                                                                         best_k[index],
-                                                                                         max_iterations=30,
-                                                                                         use_default_seed=True,
-                                                                                         plot_distances=False)
+                                                                                    best_k[index],
+                                                                                    max_iterations=30,
+                                                                                    use_default_seed=True,
+                                                                                    plot_distances=False)
         elif algorithm == 'kmedians':
             pred_labels, iteration_distance = kmedians.apply_unsupervised_learning(dataset[index],
-                                                                                         best_k[index],
-                                                                                         max_iterations=30,
-                                                                                         plot_distances=False)
+                                                                                   best_k[index],
+                                                                                   max_iterations=30,
+                                                                                   plot_distances=False)
         elif algorithm == 'f-cmeans':
-            pred_labels, error, _ = f_cmeans.apply_unsupervised_learning(dataset[index], c=best_k[index])
+            pred_labels, error, _ = f_cmeans.apply_unsupervised_learning(dataset[index], c=best_k[index],
+                                                                         max_iterations=3)
 
         elif algorithm == 'dbscan':
             model = dbscan.apply_unsupervised_learning(dataset[index], eps=best_eps[index],
@@ -75,17 +76,18 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans', plot_pca_real_labels=
                 pred_labels, k_error = bis_kmeans_real.apply_unsupervised_learning(dataset[index])
             elif algorithm == 'kmeans':
                 pred_labels, iteration_distance, _ = kmeans.apply_unsupervised_learning(dataset[index],
-                                                                                             real_k[index],
-                                                                                             max_iterations=30,
-                                                                                             use_default_seed=True,
-                                                                                             plot_distances=False)
-            elif algorithm == 'kmedians':
-                pred_labels, iteration_distance = kmedians.apply_unsupervised_learning(dataset[index],
                                                                                         real_k[index],
                                                                                         max_iterations=30,
+                                                                                        use_default_seed=True,
                                                                                         plot_distances=False)
+            elif algorithm == 'kmedians':
+                pred_labels, iteration_distance = kmedians.apply_unsupervised_learning(dataset[index],
+                                                                                       real_k[index],
+                                                                                       max_iterations=30,
+                                                                                       plot_distances=False)
             elif algorithm == 'f-cmeans':
-                pred_labels, error = f_cmeans.apply_unsupervised_learning(dataset[index], c=real_k[index])
+                pred_labels, error, _ = f_cmeans.apply_unsupervised_learning(dataset[index], c=real_k[index],
+                                                                             max_iterations=3)
 
             toc = time.time()
             print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
@@ -101,7 +103,7 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans', plot_pca_real_labels=
         for index in range(0, len(real_k)):
             target_labels = targets[index]
             plotter.plot_pca_2D(dataset[index], target_labels,
-            plot_title=f"{dataset_names[index]} Real classes K={real_k[index]}")
+                                plot_title=f"{dataset_names[index]} Real classes K={real_k[index]}")
 
 
 def get_metrics(datasets, algorithm='b-kmeans', selector_type='std'):
@@ -116,20 +118,20 @@ def get_metrics(datasets, algorithm='b-kmeans', selector_type='std'):
             for index in range(0, len(print_k)):
                 tic = time.time()
                 bisecting_kmeans.get_best_k(dataset=datasets[index], n_iterations=1, selector_type='std',
-                                                 max_k=number_k[index], print_k=print_k[index],
-                                                 print_silhouette=print_silhouette[index],
-                                                 print_calinski_harabasz=print_calinski_harabasz[index],
-                                                 print_davies_bouldin=print_davies_bouldin[index])
+                                            max_k=number_k[index], print_k=print_k[index],
+                                            print_silhouette=print_silhouette[index],
+                                            print_calinski_harabasz=print_calinski_harabasz[index],
+                                            print_davies_bouldin=print_davies_bouldin[index])
                 toc = time.time()
                 print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
         elif selector_type == 'dimension':
             for index in range(0, len(print_k)):
                 tic = time.time()
                 bisecting_kmeans.get_best_k(dataset=datasets[index], n_iterations=1, selector_type='dimension',
-                                                 max_k=number_k[index], print_k=print_k[index],
-                                                 print_silhouette=print_silhouette[index],
-                                                 print_calinski_harabasz=print_calinski_harabasz[index],
-                                                 print_davies_bouldin=print_davies_bouldin[index])
+                                            max_k=number_k[index], print_k=print_k[index],
+                                            print_silhouette=print_silhouette[index],
+                                            print_calinski_harabasz=print_calinski_harabasz[index],
+                                            print_davies_bouldin=print_davies_bouldin[index])
                 toc = time.time()
                 print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 

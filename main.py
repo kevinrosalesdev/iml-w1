@@ -130,5 +130,6 @@ if __name__ == '__main__':
     # metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm=algorithms_params[1])
 
     # TO RUN THEM ALL
+    algorithms_params = ['kmeans', 'kmedians', 'b-kmeans', 'f-cmeans']
     # for alg in algorithms_params:
     #   metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')

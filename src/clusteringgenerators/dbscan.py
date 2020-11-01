@@ -36,7 +36,7 @@ def plot_k_neighbor_distance(dataset, k):
 
 def run_dbscan(dataset, eps, min_samples, algorithm):
     print(dataset.head())
-    model = apply_unsupervised_learning(dataset, eps, min_samples)
+    model = apply_unsupervised_learning(dataset, eps, min_samples, algorithm)
     labels = model.labels_
     clusters = Counter(labels)
     # 'the id -1 contains the outliers

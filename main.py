@@ -115,30 +115,20 @@ if __name__ == '__main__':
     datasets_preprocessed = dr.get_datasets()
     targets_labels = dr.get_datasets_target()
 
+    # TEST OUR ALGORITHMS WITH THESE FUNCTIONS
     # test_dbscan(datasets_preprocessed)
     # test_kmeans(datasets_preprocessed)
     # test_kmedians(datasets_preprocessed)
     # test_bisecting_kmeans(datasets_preprocessed)
     # test_f_cmeans(datasets_preprocessed)
 
-    """kmeans.get_best_k(datasets_preprocessed, max_iterations=30, max_k=20,
-                print_k=True, print_silhouette=True, print_calinski_harabasz=True, print_davies_bouldin=True)
-    kmedians.get_best_k(datasets_preprocessed, max_iterations=10, max_k=20, print_k=True, print_silhouette=True,
-               print_calinski_harabasz=True, print_davies_bouldin=True)
-    
-    bisecting_kmeans.get_best_k(dataset, n_iterations=1, selector_type='std', max_k=20, print_k=True,
-               print_silhouette=True, print_calinski_harabasz=True, print_davies_bouldin=True)
-    
-    f_cmeans.get_best_c(datasets_preprocessed, max_iterations=10, max_c=max_k[index], print_c=True, print_perf_index=True,
-               print_silhouette=True, print_calinski_harabasz=True, print_davies_bouldin=True)
-    
-    max_k = [20, 25, 20]
-    for index in range(len(datasets_preprocessed)):
-        kmedians.get_best_k(datasets_preprocessed[index], max_iterations=30, max_k=max_k[index], print_k=True, print_silhouette=True,
-                        print_calinski_harabasz=False, print_davies_bouldin=False)
-    """
+    # ADD ONE variable of algorithms_params  TO THE FUNCTIONS BELOW TO RUN THE BEST K PLOTS WITH THE CLUSTERING METRICS
+    # OR THE CONFUSION MATRIX AND PCA PLOTS
+    algorithms_params = ['kmeans', 'kmedians', 'b-kmeans', 'f-cmeans']
 
-
-    # algorithms_params = ['kmeans', 'kmedians', 'b-kmeans', 'f-cmeans']
-    metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='kmeans')
     # metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')
+    # metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='kmeans')
+
+    # TO RUN THEM ALL
+    # for alg in algorithms_params:
+    #   metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')

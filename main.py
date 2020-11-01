@@ -132,4 +132,4 @@ if __name__ == '__main__':
     # TO RUN THEM ALL
     algorithms_params = ['kmeans', 'kmedians', 'b-kmeans', 'f-cmeans']
     # for alg in algorithms_params:
-    #   metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')
+    #   metrics.get_metrics(datasets_preprocessed, algorithm=alg, selector_type='std')

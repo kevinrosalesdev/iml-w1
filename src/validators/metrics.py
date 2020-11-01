@@ -13,6 +13,8 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans', plot_pca_real_labels=
         best_k.extend([10, 18, 15])
     elif algorithm == 'kmeans':
         best_k.extend([9, 19, 6])
+    elif algorithm == 'kmedians':
+        best_k.extend([10, 18, 8])
     elif algorithm == 'f-cmeans':
         best_k.extend([10, 18, 10])
 
@@ -31,6 +33,11 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans', plot_pca_real_labels=
                                                                                          best_k[index],
                                                                                          max_iterations=30,
                                                                                          use_default_seed=True,
+                                                                                         plot_distances=False)
+        elif algorithm == 'kmedians':
+            pred_labels, iteration_distance = kmedians.apply_unsupervised_learning(dataset[index],
+                                                                                         best_k[index],
+                                                                                         max_iterations=30,
                                                                                          plot_distances=False)
         elif algorithm == 'f-cmeans':
             pred_labels, error, _ = f_cmeans.apply_unsupervised_learning(dataset[index], c=best_k[index])
@@ -59,6 +66,11 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans', plot_pca_real_labels=
                                                                                              max_iterations=30,
                                                                                              use_default_seed=True,
                                                                                              plot_distances=False)
+            elif algorithm == 'kmedians':
+                pred_labels, iteration_distance = kmedians.apply_unsupervised_learning(dataset[index],
+                                                                                        real_k[index],
+                                                                                        max_iterations=30,
+                                                                                        plot_distances=False)
             elif algorithm == 'f-cmeans':
                 pred_labels, error = f_cmeans.apply_unsupervised_learning(dataset[index], c=real_k[index])
 

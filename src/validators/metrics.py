@@ -1,4 +1,4 @@
-import time, math, main
+import time, math
 from utils import plotter
 from clusteringgenerators import bisecting_kmeans, kmeans, kmedians, f_cmeans
 from sklearn.metrics import silhouette_score
@@ -6,7 +6,7 @@ from sklearn.metrics import calinski_harabasz_score
 from sklearn.metrics import davies_bouldin_score
 
 
-def get_cf_and_pca(dataset, targets, algorithm='b-kmeans'):
+def get_cf_and_pca(dataset, targets, algorithm='b-kmeans', plot_pca_real_labels=False):
     dataset_names = ["Pen-based (num)", "Kropt (cat)", "Hypothyroid (mxd)"]
     best_k = []
     if algorithm == 'b-kmeans':
@@ -71,11 +71,12 @@ def get_cf_and_pca(dataset, targets, algorithm='b-kmeans'):
             plotter.plot_pca_2D(dataset[index], pred_labels,
                                 plot_title=f"{dataset_names[index]} - {algorithm} K={real_k[index]}")
 
-    print("Plotting PCA DATASET WITH REAL LABELS")
-    for index in range(0, len(real_k)):
-        target_labels = targets[index]
-        plotter.plot_pca_2D(dataset[index], target_labels,
-                            plot_title=f"{dataset_names[index]} Real classes K={real_k[index]}")
+    if plot_pca_real_labels:
+        print("Plotting PCA DATASET WITH REAL LABELS")
+        for index in range(0, len(real_k)):
+            target_labels = targets[index]
+            plotter.plot_pca_2D(dataset[index], target_labels,
+            plot_title=f"{dataset_names[index]} Real classes K={real_k[index]}")
 
 
 def get_metrics(datasets, algorithm='b-kmeans', selector_type='std'):
@@ -89,7 +90,7 @@ def get_metrics(datasets, algorithm='b-kmeans', selector_type='std'):
         if selector_type == 'std':
             for index in range(0, len(print_k)):
                 tic = time.time()
-                main.get_best_k_bisecting_kmeans(dataset=datasets[index], n_iterations=1, selector_type='std',
+                bisecting_kmeans.get_best_k(dataset=datasets[index], n_iterations=1, selector_type='std',
                                                  max_k=number_k[index], print_k=print_k[index],
                                                  print_silhouette=print_silhouette[index],
                                                  print_calinski_harabasz=print_calinski_harabasz[index],
@@ -99,7 +100,7 @@ def get_metrics(datasets, algorithm='b-kmeans', selector_type='std'):
         elif selector_type == 'dimension':
             for index in range(0, len(print_k)):
                 tic = time.time()
-                main.get_best_k_bisecting_kmeans(dataset=datasets[index], n_iterations=1, selector_type='dimension',
+                bisecting_kmeans.get_best_k(dataset=datasets[index], n_iterations=1, selector_type='dimension',
                                                  max_k=number_k[index], print_k=print_k[index],
                                                  print_silhouette=print_silhouette[index],
                                                  print_calinski_harabasz=print_calinski_harabasz[index],

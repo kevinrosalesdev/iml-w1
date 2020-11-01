@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.metrics import silhouette_score
 from sklearn.metrics import calinski_harabasz_score
 from sklearn.metrics import davies_bouldin_score
+from collections import Counter
+
 
 
 def apply_unsupervised_learning(dataset, k, max_iterations=30, plot_distances=True):
@@ -62,3 +64,12 @@ def get_best_k(dataset, max_iterations=10, max_k=20, print_k=True, print_silhoue
         plotter.plot_k_calinski_harabasz_score(ch_score)
     if print_davies_bouldin:
         plotter.plot_k_davies_bouldin_score(db_score)
+
+
+def run_kmedians(dataset, k, max_iterations=30):
+    print(dataset.head())
+    labels = apply_unsupervised_learning(dataset, k, max_iterations)[0]
+    print(labels)
+    clusters = Counter(labels)
+    print("Clusters id and the points inside in K-medians:", clusters)
+    print('Num of clusters in K-medians = {}'.format(len(clusters)))

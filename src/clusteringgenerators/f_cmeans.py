@@ -3,6 +3,7 @@ from sklearn.metrics import silhouette_score
 from sklearn.metrics import calinski_harabasz_score
 from sklearn.metrics import davies_bouldin_score
 from utils import plotter
+from collections import Counter
 import numpy as np
 
 
@@ -88,3 +89,12 @@ def get_best_c(dataset, max_iterations=10, max_c=20, print_c=True, print_perf_in
         plotter.plot_k_calinski_harabasz_score(ch_score)
     if print_davies_bouldin:
         plotter.plot_k_davies_bouldin_score(db_score)
+
+
+def run_f_cmeans(dataset, c, max_iterations=100, m=2):
+    print(dataset.head())
+    labels = apply_unsupervised_learning(dataset, c, max_iterations, m)[0]
+    print(labels)
+    clusters = Counter(labels)
+    print("Clusters id and the points inside in K-medians:", clusters)
+    print('Num of clusters in K-medians = {}'.format(len(clusters)))

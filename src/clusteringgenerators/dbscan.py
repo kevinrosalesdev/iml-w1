@@ -2,6 +2,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics.pairwise import euclidean_distances
 from matplotlib import pyplot as plt
 import numpy as np
+from collections import Counter
 
 
 def apply_unsupervised_learning(dataset, eps, min_samples):
@@ -31,3 +32,14 @@ def plot_k_neighbor_distance(dataset, k):
     plt.plot(list(range(0, dataset.shape[0] - h_outliers_count)),
              np.sort(k_nnd)[:-h_outliers_count], marker=".")
     plt.show()
+
+
+def run_dbscan(dataset, eps, min_samples):
+    print(dataset.head())
+    model = apply_unsupervised_learning(dataset, eps, min_samples)
+    labels = model.labels_
+    clusters = Counter(labels)
+    # 'the id -1 contains the outliers
+    print("Clusters id and the points inside:", clusters)
+    print('Num of clusters = {}'.format(len(clusters) - 1))
+

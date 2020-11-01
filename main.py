@@ -1,77 +1,53 @@
 from arffdatasetreader import dataset_reader as dr
 from clusteringgenerators import dbscan, kmeans, kmedians, f_cmeans, bisecting_kmeans
 from validators import metrics
-from collections import Counter
 import time
 import math
-
-
-def run_dbscan(dataset, eps, min_samples):
-    print(dataset.head())
-    model = dbscan.apply_unsupervised_learning(dataset, eps, min_samples)
-    labels = model.labels_
-    clusters = Counter(labels)
-    # 'the id -1 contains the outliers
-    print("Clusters id and the points inside:", clusters)
-    print('Num of clusters = {}'.format(len(clusters) - 1))
-
-
-def run_kmeans(dataset, k, max_iterations=30):
-    print(dataset.head())
-    labels = kmeans.apply_unsupervised_learning(dataset, k, max_iterations)[0]
-    print(labels)
-    clusters = Counter(labels)
-    print("Clusters id and the points inside:", clusters)
-    print('Num of clusters = {}'.format(len(clusters)))
-
-
-def run_kmedians(dataset, k, max_iterations=30):
-    print(dataset.head())
-    labels = kmedians.apply_unsupervised_learning(dataset, k, max_iterations)[0]
-    print(labels)
-    clusters = Counter(labels)
-    print("Clusters id and the points inside in K-medians:", clusters)
-    print('Num of clusters in K-medians = {}'.format(len(clusters)))
-
-
-def run_f_cmeans(dataset, c, max_iterations=100, m=2):
-    print(dataset.head())
-    labels = f_cmeans.apply_unsupervised_learning(dataset, c, max_iterations, m)[0]
-    print(labels)
-    clusters = Counter(labels)
-    print("Clusters id and the points inside in K-medians:", clusters)
-    print('Num of clusters in K-medians = {}'.format(len(clusters)))
 
 
 def test_dbscan(datasets):
     print("Numerical Dataset ('Pen-based') clustering with DBScan")
     min_samples = int(datasets[0].shape[1] + 1 + 0.001 * datasets[0].shape[0])
-    # dbscan.plot_k_neighbor_distance(datasets[0], k=min_samples)
-    run_dbscan(datasets[0], eps=14.03, min_samples=min_samples)
+    dbscan.plot_k_neighbor_distance(datasets[0], k=min_samples)
+    dbscan.run_dbscan(datasets[0], eps=14.03, min_samples=min_samples)
 
     print("Categorical Dataset ('Kropt') clustering with DBScan")
     min_samples = int(datasets[1].shape[1] + 1 + 0.001 * datasets[1].shape[0])
-    # dbscan.plot_k_neighbor_distance(datasets[1], k=min_samples)
-    run_dbscan(datasets[1], eps=18.1, min_samples=min_samples)
+    dbscan.plot_k_neighbor_distance(datasets[1], k=min_samples)
+    dbscan.run_dbscan(datasets[1], eps=18.1, min_samples=min_samples)
 
     print("Mixed Dataset ('hypothyroid') clustering with DBScan")
     min_samples = int(datasets[2].shape[1] + 1 + 0.001 * datasets[2].shape[0])
-    # dbscan.plot_k_neighbor_distance(datasets[2], k=min_samples)
-    run_dbscan(datasets[2], eps=75.49, min_samples=min_samples)
+    dbscan.plot_k_neighbor_distance(datasets[2], k=min_samples)
+    dbscan.run_dbscan(datasets[2], eps=75.49, min_samples=min_samples)
 
 
 def test_kmeans(datasets):
     print("Numerical Dataset ('Pen-based') clustering with K-Means")
     kmeans.get_best_k(datasets[0], max_iterations=30)
-    run_kmeans(datasets[0], k=10, max_iterations=30)
+    kmeans.run_kmeans(datasets[0], k=10, max_iterations=30)
 
     print("Categorical Dataset ('Kropt') clustering with K-Means")
     kmeans.get_best_k(datasets[1], max_iterations=30)
-    run_kmeans(datasets[1], k=18, max_iterations=30)
+    kmeans.run_kmeans(datasets[1], k=18, max_iterations=30)
 
     print("Mixed Dataset ('hypothyroid') clustering with K-Means")
     kmeans.get_best_k(datasets[2], max_iterations=30)
-    run_kmeans(datasets[2], k=2, max_iterations=30)
+    kmeans.run_kmeans(datasets[2], k=2, max_iterations=30)
+
+
+def test_kmedians(datasets):
+    print("Numerical Dataset ('Pen-based') clustering with K-Medians")
+    kmedians.get_best_k(datasets[0], max_iterations=30)
+    kmedians.run_kmedians(datasets[0], k=10, max_iterations=30)
+
+    print("Numerical Dataset ('Kropt') clustering with K-Medians")
+    kmedians.get_best_k(datasets[1], max_iterations=30)
+    kmedians.run_kmedians(datasets[1], k=18, max_iterations=30)
+
+    print("Mixed Dataset ('hypothyroid') clustering with K-Medians")
+    kmedians.get_best_k(datasets[2], max_iterations=30)
+    kmedians.run_kmedians(datasets[2], k=2, max_iterations=30)
 
 
 def test_bisecting_kmeans(datasets):
@@ -90,32 +66,18 @@ def test_bisecting_kmeans(datasets):
         print(f"execution time: {math.trunc((toc - tic) / 60)}m {math.trunc((toc - tic) % 60)}s")
 
 
-def test_kmedians(datasets):
-    print("Numerical Dataset ('Pen-based') clustering with K-Medians")
-    # kmedians.get_best_k(datasets[0], max_iterations=30)
-    run_kmedians(datasets[0], k=10, max_iterations=30)
-
-    print("Numerical Dataset ('Kropt') clustering with K-Medians")
-    # kmedians.get_best_k(datasets[1], max_iterations=30)
-    run_kmedians(datasets[1], k=18, max_iterations=30)
-
-    print("Mixed Dataset ('hypothyroid') clustering with K-Medians")
-    # kmedians.get_best_k(datasets[2], max_iterations=30)
-    run_kmedians(datasets[2], k=2, max_iterations=30)
-
-
 def test_f_cmeans(datasets):
     print("Numerical Dataset ('Pen-based') clustering with Fuzzy C-Means")
-    # f_cmeans.get_best_c(datasets[0], max_iterations=10, max_c=20)
-    run_f_cmeans(datasets[0], c=10, max_iterations=5, m=2)
+    f_cmeans.get_best_c(datasets[0], max_iterations=10, max_c=20)
+    f_cmeans.run_f_cmeans(datasets[0], c=10, max_iterations=5, m=2)
 
     print("Numerical Dataset ('Kropt') clustering with Fuzzy C-Means")
-    # f_cmeans.get_best_c(datasets[0], max_iterations=10, max_c=20)
-    run_f_cmeans(datasets[1], c=18, max_iterations=30)
+    f_cmeans.get_best_c(datasets[0], max_iterations=10, max_c=20)
+    f_cmeans.run_f_cmeans(datasets[1], c=18, max_iterations=30)
 
     print("Mixed Dataset ('hypothyroid') clustering with Fuzzy C-Means")
-    # f_cmeans.get_best_c(datasets[0], max_iterations=10, max_c=20)
-    run_f_cmeans(datasets[2], c=2, max_iterations=30)
+    f_cmeans.get_best_c(datasets[0], max_iterations=10, max_c=20)
+    f_cmeans.run_f_cmeans(datasets[2], c=2, max_iterations=30)
 
 
 if __name__ == '__main__':
@@ -123,13 +85,24 @@ if __name__ == '__main__':
     targets_labels = dr.get_datasets_target()
 
     # test_dbscan(datasets_preprocessed)
-    # test_kmeans()
-    # test_bisecting_kmeans(datasets_preprocessed)
+    # test_kmeans(datasets_preprocessed)
     # test_kmedians(datasets_preprocessed)
+    # test_bisecting_kmeans(datasets_preprocessed)
     # test_f_cmeans(datasets_preprocessed)
 
-    # metrics.get_metrics(datasets_preprocessed, algorithm='f-cmeans')
-    metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='f-cmeans')
+    kmeans.get_best_k(datasets_preprocessed, max_iterations=30, max_k=20,
+                      print_k=True, print_silhouette=True, print_calinski_harabasz=True, print_davies_bouldin=True)
+    kmedians.get_best_k(datasets_preprocessed, max_iterations=10, max_k=20, print_k=True, print_silhouette=True,
+               print_calinski_harabasz=True, print_davies_bouldin=True)
+    f_cmeans.get_best_c(datasets_preprocessed, max_iterations=10, max_c=20, print_c=True, print_perf_index=True,
+               print_silhouette=True, print_calinski_harabasz=True, print_davies_bouldin=True)
+    
+    for dataset in datasets_preprocessed:
+        bisecting_kmeans.get_best_k(dataset, n_iterations=1, selector_type='std', max_k=20, print_k=True,
+               print_silhouette=True,
+               print_calinski_harabasz=True,
+               print_davies_bouldin=True)
 
-    # metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='b-kmeans')
-    # metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')
+    algorithms_params = ['kmeans', 'kmedians', 'b-kmeans', 'f-cmeans']
+    metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='kmeans')
+    metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')

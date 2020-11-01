@@ -14,15 +14,17 @@ def apply_unsupervised_learning(dataset, c, max_iterations=100, m=2):
     eps = 0.01
     centroid_change = eps + 1
     iteration = 0
+    exp = (2 / (m - 0.99999))
 
     while iteration < max_iterations and centroid_change > eps:
         print("Iteration:", iteration)
 
-        u = [[1 / (np.sum([(manhattan_distances([sample], [cluster])[0][0] /
-                           manhattan_distances([sample], [other_cluster])[0][0]) ** (2 / (m - 0.99999))
-                           for other_cluster in centroids]))
-              for sample in np_dataset]
-             for cluster in centroids]
+        distance_matrix = manhattan_distances(centroids, np_dataset)
+
+        u = [[1 / (np.sum([(distance_matrix[index_c, index_s] / distance_matrix[index_oc, index_s]) ** exp
+                           for index_oc in range(len(centroids))]))
+              for index_s in range(np_dataset.shape[0])]
+             for index_c in range(len(centroids))]
 
         last_centroids = np.copy(centroids)
 
@@ -36,7 +38,8 @@ def apply_unsupervised_learning(dataset, c, max_iterations=100, m=2):
 
         centroid_change = np.sum([manhattan_distances([last_centroids[cluster]], [centroids[cluster]])[0][0]
                                   for cluster in range(c)])
-        print(error, centroid_change)
+
+        print("Error:", error, "| Centroid change:", centroid_change)
 
         iteration += 1
 

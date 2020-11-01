@@ -92,36 +92,35 @@ def test_bisecting_kmeans(datasets):
 
 def test_kmedians(datasets):
     print("Numerical Dataset ('Pen-based') clustering with K-Medians")
-    kmedians.get_best_k(datasets[0], max_iterations=30)
+    # kmedians.get_best_k(datasets[0], max_iterations=30)
     run_kmedians(datasets[0], k=10, max_iterations=30)
 
     print("Numerical Dataset ('Kropt') clustering with K-Medians")
-    kmedians.get_best_k(datasets[1], max_iterations=30)
+    # kmedians.get_best_k(datasets[1], max_iterations=30)
     run_kmedians(datasets[1], k=18, max_iterations=30)
 
     print("Mixed Dataset ('hypothyroid') clustering with K-Medians")
-    kmedians.get_best_k(datasets[2], max_iterations=30)
+    # kmedians.get_best_k(datasets[2], max_iterations=30)
     run_kmedians(datasets[2], k=2, max_iterations=30)
 
 
 def test_f_cmeans(datasets):
     print("Numerical Dataset ('Pen-based') clustering with Fuzzy C-Means")
+    # f_cmeans.get_best_c(datasets[0], max_iterations=10, max_c=20)
     run_f_cmeans(datasets[0], c=10, max_iterations=5, m=2)
 
     print("Numerical Dataset ('Kropt') clustering with Fuzzy C-Means")
-    # run_f_cmeans(datasets[1], c=18, max_iterations=30)
+    # f_cmeans.get_best_c(datasets[0], max_iterations=10, max_c=20)
+    run_f_cmeans(datasets[1], c=18, max_iterations=30)
 
     print("Mixed Dataset ('hypothyroid') clustering with Fuzzy C-Means")
-    # run_f_cmeans(datasets[2], c=2, max_iterations=30)
+    # f_cmeans.get_best_c(datasets[0], max_iterations=10, max_c=20)
+    run_f_cmeans(datasets[2], c=2, max_iterations=30)
 
 
 if __name__ == '__main__':
     datasets_preprocessed = dr.get_datasets()
     targets_labels = dr.get_datasets_target()
-
-    # f_cmeans.get_best_c(datasets_preprocessed[2], max_c=5)
-    #metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='f-cmeans')
-
 
     # test_dbscan(datasets_preprocessed)
     # test_kmeans()
@@ -129,5 +128,8 @@ if __name__ == '__main__':
     # test_kmedians(datasets_preprocessed)
     # test_f_cmeans(datasets_preprocessed)
 
-    metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='b-kmeans')
+    # metrics.get_metrics(datasets_preprocessed, algorithm='f-cmeans')
+    metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='f-cmeans')
+
+    # metrics.get_cf_and_pca(datasets_preprocessed, targets_labels, algorithm='b-kmeans')
     # metrics.get_metrics(datasets_preprocessed, algorithm='b-kmeans', selector_type='std')
